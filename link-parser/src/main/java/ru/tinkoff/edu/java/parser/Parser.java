@@ -16,8 +16,6 @@ public abstract class Parser {
         return process(url);
     }
 
-    // Maybe it shouldn't return the last added handler to the chain?
-    // Should it be more straightforward?
     public Parser setNext(Parser next) {
         this.next = next;
         return next;
