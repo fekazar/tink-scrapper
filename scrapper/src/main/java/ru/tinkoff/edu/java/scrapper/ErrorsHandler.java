@@ -15,6 +15,7 @@ public class ErrorsHandler {
     // What is HttpMessageNotReadableException really responsible for?
     // Is there a better way to handle "internal" exceptions?
     // Or there enough information in exception message?
+    // TODO: write better implementation with concrete task, placeholders for now
     @ExceptionHandler({ResponseStatusException.class,
             HttpMessageNotReadableException.class})
     ApiErrorResponse handle(Exception e) {
