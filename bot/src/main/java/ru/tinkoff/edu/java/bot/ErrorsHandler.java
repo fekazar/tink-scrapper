@@ -10,10 +10,6 @@ import ru.tinkoff.edu.java.bot.response.ApiErrorResponse;
 
 @RestControllerAdvice
 public class ErrorsHandler {
-
-    // What is HttpMessageNotReadableException really responsible for?
-    // Is there a better way to handle "internal" exceptions?
-    // Or there enough information in exception message?
     @ExceptionHandler({ResponseStatusException.class,
             HttpMessageNotReadableException.class})
     ApiErrorResponse handleBadRequest(Exception e) {
