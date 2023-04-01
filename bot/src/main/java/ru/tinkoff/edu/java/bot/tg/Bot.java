@@ -27,6 +27,9 @@ public class Bot implements AutoCloseable {
         // TODO: make async processing for each request
         bot.setUpdatesListener(updates -> {
             for (var update: updates) {
+                if (update.message() == null)
+                    continue;
+
                 SendMessage answer = messageProcessor.process(update);
                 bot.execute(answer);
             }

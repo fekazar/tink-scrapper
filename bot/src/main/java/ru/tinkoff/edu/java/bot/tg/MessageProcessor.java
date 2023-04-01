@@ -6,8 +6,8 @@ import com.pengrad.telegrambot.request.SendMessage;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.support.SpringFactoriesLoader;
 import org.springframework.stereotype.Component;
+import ru.tinkoff.edu.java.bot.tg.command.CommandProcessor;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -28,6 +28,9 @@ public class MessageProcessor {
 
     public SendMessage process(Update update) {
         var msg = update.message();
+
+        if (msg.entities() == null)
+            return new SendMessage(msg.chat().id(), NO_COMMAND);
 
         if (msg != null && msg.entities() != null) {
             long commandsCnt = Arrays.stream(msg.entities())
