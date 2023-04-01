@@ -1,15 +1,15 @@
 package ru.tinkoff.edu.java.bot.tg.command;
 
-import com.pengrad.telegrambot.model.Message;
-import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.stereotype.Component;
 
 @Component("help")
 public class HelpCommandProcessor implements CommandProcessor {
+    public static final String HELP_MSG = "Welcome to the links tracking bot! Available commands are listed in Telegram.";
+
     @Override
-    public SendMessage process(Message msg) {
+    public String process(String command, String text) {
         // TODO: return "help" messgage
         // make these messages centralized
-        return new SendMessage(msg.chat().id(), "Welcome to the links tracking bot! Available commands are listed in Telegram.");
+        return HELP_MSG;
     }
 }

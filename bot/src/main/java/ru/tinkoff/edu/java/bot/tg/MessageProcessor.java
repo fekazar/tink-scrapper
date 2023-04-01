@@ -1,9 +1,9 @@
 package ru.tinkoff.edu.java.bot.tg;
 
+import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.MessageEntity;
-import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.request.SendMessage;
 import jakarta.annotation.PostConstruct;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,44 +19,42 @@ import java.util.Map;
 @Component
 public class MessageProcessor {
     // TODO: create preconfigured default answers
-    private static final String NO_COMMAND = "There is no command in request.";
-    private static final String UNSUPPORTED_COMMAND = "This is an unsupported command.";
-    private static final String MULTIPLE_COMMANDS = "Multiple commands are unsupported in one request.";
+    public static final String NO_COMMAND = "There is no command in request.";
+    public static final String UNSUPPORTED_COMMAND = "This is an unsupported command.";
+    public static final String MULTIPLE_COMMANDS = "Multiple commands are unsupported in one request.";
 
-    @Autowired
     private Map<String, CommandProcessor> map;
 
-    public SendMessage process(Update update) {
-        var msg = update.message();
+    @Autowired
+    public MessageProcessor(Map<String, CommandProcessor> map) {
+        this.map = map;
+    }
 
+    // Message cannot be null. This method should be called only
+    // to process a new message and no other type of updates.
+    // Returns the message text to be sent to user.
+    public String process(@NotNull Message msg) {
         if (msg.entities() == null)
-            return new SendMessage(msg.chat().id(), NO_COMMAND);
+            return NO_COMMAND;
 
-        if (msg != null && msg.entities() != null) {
-            long commandsCnt = Arrays.stream(msg.entities())
-                    .filter(messageEntity -> messageEntity.type().equals(MessageEntity.Type.bot_command))
-                    .count();
+        long commandsCnt = Arrays.stream(msg.entities())
+                .filter(messageEntity -> messageEntity.type().equals(MessageEntity.Type.bot_command))
+                .count();
 
-            if (commandsCnt > 1)
-                return new SendMessage(msg.chat().id(), MULTIPLE_COMMANDS);
+        if (commandsCnt > 1)
+            return MULTIPLE_COMMANDS;
 
-            if (commandsCnt == 0)
-                return new SendMessage(msg.chat().id(), NO_COMMAND);
+        if (commandsCnt == 0)
+            return  NO_COMMAND;
 
-            var commandEntity = msg.entities()[0];
-            String command = msg.text().substring(commandEntity.offset() + 1, commandEntity.length());
+        var commandEntity = msg.entities()[0];
+        String command = msg.text().substring(commandEntity.offset() + 1, commandEntity.length());
 
-            if (!map.containsKey(command)) {
-                return new SendMessage(msg.chat().id(), UNSUPPORTED_COMMAND);
-            } else {
-                return map.get(command).process(msg);
-            }
-        } else if (update.editedMessage() != null) {
-            return new SendMessage(update.editedMessage().chat().id(), "Requests for edited messages are not supported.");
+        if (!map.containsKey(command)) {
+            return UNSUPPORTED_COMMAND;
+        } else {
+            return map.get(command).process(command, msg.text());
         }
-
-        // Which chat id to use, when there is another type of update?
-        return null;
     }
 
     @PostConstruct

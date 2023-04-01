@@ -1,13 +1,13 @@
 package ru.tinkoff.edu.java.bot.tg.command;
 
-import com.pengrad.telegrambot.model.Message;
-import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.stereotype.Component;
 
 @Component("list")
 public class ListCommandProcessor implements CommandProcessor {
+    public static final String EMPTY_LIST = "List of tracking links is empty now. Try adding new via special command";
+
     @Override
-    public SendMessage process(Message msg) {
-        return new SendMessage(msg.chat().id(), "Lists are empty for now.");
+    public String process(String command, String text) {
+        return EMPTY_LIST;
     }
 }

@@ -2,12 +2,15 @@ package ru.tinkoff.edu.java.bot.tg;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
+import com.pengrad.telegrambot.model.MessageEntity;
 import com.pengrad.telegrambot.request.SendMessage;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
 
 @Slf4j
 @Component
@@ -30,8 +33,11 @@ public class Bot implements AutoCloseable {
                 if (update.message() == null)
                     continue;
 
-                SendMessage answer = messageProcessor.process(update);
-                bot.execute(answer);
+                var msg = update.message();
+                String answer = messageProcessor.process(msg);
+
+                long chatId = msg.chat().id();
+                bot.execute(new SendMessage(chatId, answer));
             }
 
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
