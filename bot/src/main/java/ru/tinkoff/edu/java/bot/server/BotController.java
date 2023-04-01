@@ -1,14 +1,12 @@
-package ru.tinkoff.edu.java.bot;
+package ru.tinkoff.edu.java.bot.server;
 
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import ru.tinkoff.edu.java.bot.request.LinkUpdateRequest;
-import ru.tinkoff.edu.java.bot.response.ApiErrorResponse;
+import ru.tinkoff.edu.java.bot.server.request.LinkUpdateRequest;
+import ru.tinkoff.edu.java.bot.server.response.ApiErrorResponse;
 
 @Slf4j
 @RestController

@@ -1,8 +1,8 @@
 package ru.tinkoff.edu.java.bot.configuration;
 
 import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.request.SendMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +17,7 @@ import java.util.Arrays;
 
 // TODO: make preconfigured messaged centralized.
 
+@Slf4j
 @Configuration
 @PropertySource("classpath:secrets.properties")
 public class BotConfig {
@@ -36,9 +37,9 @@ public class BotConfig {
     public CommandProcessor trackProcessor() {
         return msg -> {
             var words = new ArrayList<String>(Arrays.asList(msg.text().split(" ")));
-            int ind = words.indexOf("track");
+            int ind = words.indexOf("/track");
 
-            if (ind == words.size()) {
+            if (ind == words.size() - 1) {
                 return new SendMessage(msg.chat().id(), "Error: url is not specified.");
             }
 

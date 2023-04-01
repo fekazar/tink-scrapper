@@ -48,9 +48,12 @@ public class MessageProcessor {
             } else {
                 return map.get(command).process(msg);
             }
+        } else if (update.editedMessage() != null) {
+            return new SendMessage(update.editedMessage().chat().id(), "Requests for edited messages are not supported.");
         }
 
-        return new SendMessage(msg.chat().id(), "Request processing is very poor for now. (coming soon)");
+        // Which chat id to use, when there is another type of update?
+        return null;
     }
 
     @PostConstruct
