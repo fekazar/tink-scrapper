@@ -21,14 +21,14 @@ import java.util.List;
 public class LinksController {
     @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     @PostMapping(value = "/links")
-    LinkResponse addLink(@RequestBody AddLinkRequest request) {
+    LinkResponse addLink(@RequestHeader AddLinkRequest request) {
         log.info("POST request to /links");
         return null;
     }
 
     @GetMapping(value = "/links")
     @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
-    List<LinkResponse> getLink(@RequestBody long tgChatId) {
+    List<LinkResponse> getLink(@RequestHeader long tgChatId) {
         log.info("GET request to /links");
         return new ArrayList<>();
     }
@@ -36,7 +36,8 @@ public class LinksController {
     @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     @DeleteMapping(value = "/links")
-    LinkResponse deleteLink(@RequestBody RemoveLinkRequest request) {
+    LinkResponse deleteLink(@RequestHeader long tgChatId,
+                            @RequestBody RemoveLinkRequest request) {
         log.info("DELETE request for /links");
         return null;
     }
