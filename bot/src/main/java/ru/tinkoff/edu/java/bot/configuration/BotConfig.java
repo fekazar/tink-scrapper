@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.scheduling.annotation.EnableAsync;
 import ru.tinkoff.edu.java.bot.tg.command.CommandProcessor;
 
 // TODO: make preconfigured messaged centralized.
@@ -15,6 +16,7 @@ import ru.tinkoff.edu.java.bot.tg.command.CommandProcessor;
 @Slf4j
 @Configuration
 @PropertySource("classpath:secrets.properties")
+@EnableAsync
 public class BotConfig {
     @Bean
     public String botApiKey(@Value("${secrets.bot_api_key}") String key) {

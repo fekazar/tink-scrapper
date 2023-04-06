@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import ru.tinkoff.edu.java.bot.tg.MessageProcessor;
 import ru.tinkoff.edu.java.bot.tg.command.CommandProcessor;
 import ru.tinkoff.edu.java.bot.tg.command.ListCommandProcessor;
+import ru.tinkoff.edu.java.bot.tg.command.TrackCommandProcessor;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -51,6 +52,26 @@ public class MessageProcessorTest {
         // Map is not required in this test
         var msgProcessor = new MessageProcessor(null);
         assertEquals(MessageProcessor.MULTIPLE_COMMANDS, msgProcessor.process(msg));
+    }
+
+    @Test
+    void check_if_offset_not_zero_Test() {
+        final var text = "fjkdaslfj ksdlafj ksdlajfk slad /track fjdkaslfjk";
+
+        var msgEntity = new MessageEntity(MessageEntity.Type.bot_command,
+                text.indexOf("/track"),
+                6);
+
+        var msg = mock(Message.class);
+        when(msg.text()).thenReturn(text);
+        when(msg.entities()).thenReturn(new MessageEntity[]{msgEntity});
+
+        Map<String, CommandProcessor> map = new TreeMap<>();
+
+        map.put("track", new TrackCommandProcessor());
+        var msgProcessor = new MessageProcessor(map);
+
+        assertEquals(TrackCommandProcessor.BAD_URL, msgProcessor.process(msg));
     }
 
     @Test

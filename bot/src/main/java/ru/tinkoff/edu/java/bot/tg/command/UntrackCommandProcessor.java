@@ -7,16 +7,17 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-@Component("untrack")
+@Component(value = UntrackCommandProcessor.UNTRACK_COM)
 public class UntrackCommandProcessor implements CommandProcessor {
     public static final String NO_URL = "Error: no URL is specified.";
     public static final String BAD_URL = "Error: given URL is incorrect.";
+    public static final String UNTRACK_COM = "untrack";
 
     // This logic is similar to TrackCommandProcessor
     @Override
     public String process(String command, String text) {
         var words = new ArrayList<String>(Arrays.asList(text.split(" ")));
-        int ind = words.indexOf("/untrack");
+        int ind = words.indexOf("/" + UNTRACK_COM);
 
         if (ind == words.size() - 1)
             return NO_URL;

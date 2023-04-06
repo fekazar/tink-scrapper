@@ -48,7 +48,8 @@ public class MessageProcessor {
             return  NO_COMMAND;
 
         var commandEntity = msg.entities()[0];
-        String command = msg.text().substring(commandEntity.offset() + 1, commandEntity.length());
+        String command = msg.text().substring(commandEntity.offset() + 1, commandEntity.offset() + commandEntity.length());
+        log.info("Command arrived: " + command);
 
         if (!map.containsKey(command)) {
             return UNSUPPORTED_COMMAND;
