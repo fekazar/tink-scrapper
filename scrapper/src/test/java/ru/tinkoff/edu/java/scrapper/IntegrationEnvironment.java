@@ -32,7 +32,7 @@ public abstract class IntegrationEnvironment {
 
     @Configuration
     public static class Config {
-        @Bean
+        @Bean("postgresDataSource")
         public DataSource postgresDataSource() {
             return DataSourceBuilder
                     .create()

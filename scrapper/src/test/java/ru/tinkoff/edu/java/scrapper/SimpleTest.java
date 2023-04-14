@@ -24,6 +24,5 @@ public class SimpleTest extends IntegrationEnvironment {
         var statement = conn.createStatement();
         assertDoesNotThrow(() -> statement.execute("SELECT * FROM chats;"));
         assertDoesNotThrow(() -> statement.execute("SELECT * FROM links;"));
-
     }
 }
