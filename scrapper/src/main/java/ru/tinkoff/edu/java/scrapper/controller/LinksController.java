@@ -37,12 +37,7 @@ public class LinksController {
     LinkResponse addLink(@RequestHeader long tgChatId,
                          @RequestBody AddLinkRequest request) {
         log.info("POST request to /links");
-
-        try {
-            linkService.add(request.url().toString(), tgChatId);
-        } catch (Exception e) {
-            throw new ResponseStatusException(400, e.getMessage(), e);
-        }
+        linkService.add(request.url().toString(), tgChatId);
 
         return new LinkResponse(tgChatId, request.url());
     }
