@@ -7,7 +7,7 @@ CREATE TABLE chats(
 
 --changeset fyodor:2
 CREATE TABLE links(
-    id INTEGER PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     url VARCHAR(2000) NOT NULL,
     chat_id INTEGER REFERENCES chats (id)
 )

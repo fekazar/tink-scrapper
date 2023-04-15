@@ -22,17 +22,17 @@ public class LinkUpdateScheduler {
         // For now there are hard-coded values
         // TODO: make a repository
 
-        log.info("Updating data from clients...");
+        //log.info("Updating data from clients...");
 
-        githubClient.getRepository("User-FK", "tink_java_proj")
-                .subscribe(githubClient  -> {
-                    log.info("Github updated at: " + githubClient.updated_at());
-                });
+        //githubClient.getRepository("User-FK", "tink_java_proj")
+        //        .subscribe(githubClient  -> {
+        //            log.info("Github updated at: " + githubClient.updated_at());
+        //        });
 
-        stackOverflowClient.getQuestions(4421706)
-                .subscribe(stackOverflowResponse -> {
-                    for (var question: stackOverflowResponse.items())
-                        log.info("Question: " + question);
-                });
+        //stackOverflowClient.getQuestions(4421706)
+        //        .subscribe(stackOverflowResponse -> {
+        //            for (var question: stackOverflowResponse.items())
+        //                log.info("Question: " + question);
+        //        });
     }
 }
