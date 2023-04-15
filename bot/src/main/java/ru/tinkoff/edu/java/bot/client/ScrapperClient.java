@@ -44,6 +44,7 @@ public class ScrapperClient {
 
     public LinkResponse deleteLink(long tgChatId, URL url) {
         return client.method(HttpMethod.DELETE)
+                .uri(uriBuilder -> uriBuilder.pathSegment("links").build())
                 .header("tgChatId", String.valueOf(tgChatId))
                 .bodyValue(new RemoveLinkRequest(url))
                 .retrieve()
@@ -76,7 +77,11 @@ public class ScrapperClient {
 
     public void deleteChat(long tgChatId) {
         client.delete()
-                .uri(uriBuilder -> uriBuilder.pathSegment(String.valueOf(tgChatId)).build())
+                .uri(uriBuilder -> uriBuilder
+                        .pathSegment("links")
+                        .pathSegment(String.valueOf(tgChatId)).build())
+                .header("content-type", MediaType.APPLICATION_JSON_VALUE)
+                .header("tgChatId", String.valueOf(tgChatId))
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
