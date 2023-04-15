@@ -4,6 +4,10 @@ app:
   scheduler:
     interval: 15000
 
+spring:
+  liquibase:
+    enabled: false
+
 springdoc:
   swagger-ui:
     path: /swagger-ui

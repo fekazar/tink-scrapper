@@ -9,6 +9,8 @@ public interface ScrapperRepository {
     List<LinkRecord> getAllLinks();
     List<LinkRecord> getLinksForChat(int chatId);
 
+    boolean hasChat(int chatId);
+
     void addChat(int chatId);
     void addLink(String url, int chatId);
 

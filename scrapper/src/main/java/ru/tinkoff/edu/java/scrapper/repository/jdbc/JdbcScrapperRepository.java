@@ -1,9 +1,12 @@
-package ru.tinkoff.edu.java.scrapper.repository;
+package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ru.tinkoff.edu.java.scrapper.repository.ChatRecord;
+import ru.tinkoff.edu.java.scrapper.repository.LinkRecord;
+import ru.tinkoff.edu.java.scrapper.repository.ScrapperRepository;
 
 import java.util.List;
 import java.util.Map;
@@ -41,6 +44,14 @@ public class JdbcScrapperRepository implements ScrapperRepository {
     }
 
     @Override
+    public boolean hasChat(int chatId) {
+        return jdbcTemplate.queryForRowSet(
+                "select id from chats where id = :id",
+                Map.of("id", chatId)
+        ).next();
+    }
+
+    @Override
     public void addChat(int chatId) {
         jdbcTemplate.update(
                 "insert into chats (id) values (:chatId)",
@@ -59,7 +70,7 @@ public class JdbcScrapperRepository implements ScrapperRepository {
     @Override
     public void deleteChat(int chatId) {
         jdbcTemplate.update(
-                "delete from chat where id = :id",
+                "delete from chats where id = :id",
                 Map.of("id", chatId)
         );
     }

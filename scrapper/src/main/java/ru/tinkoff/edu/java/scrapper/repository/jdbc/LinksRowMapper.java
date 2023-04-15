@@ -1,7 +1,8 @@
-package ru.tinkoff.edu.java.scrapper.repository;
+package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import ru.tinkoff.edu.java.scrapper.repository.LinkRecord;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

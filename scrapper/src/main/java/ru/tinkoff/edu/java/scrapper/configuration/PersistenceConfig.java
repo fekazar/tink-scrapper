@@ -21,7 +21,7 @@ public class PersistenceConfig {
             @Value("${secrets.db_url}") String url,
             @Value("${secrets.db_user}") String user,
             @Value("${secrets.db_pass}") String password
-    ) { // TODO: get these values from property source
+    ) {
         log.info("Url for scrapper datasource: " + url);
         return DataSourceBuilder.create()
                 .url(url)
