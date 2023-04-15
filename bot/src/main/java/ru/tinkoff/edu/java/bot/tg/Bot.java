@@ -55,6 +55,16 @@ public class Bot implements AutoCloseable {
         bot.execute(new SendMessage(chatId, answer));
     }
 
+    public void sendTextMessage(String msg, long tgChatId) {
+        try {
+            var toSend = new SendMessage(tgChatId, msg);
+            bot.execute(toSend);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void close() throws Exception {
         bot.shutdown();

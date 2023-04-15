@@ -20,7 +20,7 @@ public class StartCommandProcessor implements CommandProcessor {
             scrapperClient.registerChat(chatId);
             return "Welcome!";
         } catch (WebClientResponseException e) {
-            return e.getResponseBodyAs(ApiErrorResponse.class).exceptionMessage(); // return description instead, make it more verbose
+            return e.getResponseBodyAs(ApiErrorResponse.class).exceptionMessage(); // return textMessage instead, make it more verbose
         }
     }
 }

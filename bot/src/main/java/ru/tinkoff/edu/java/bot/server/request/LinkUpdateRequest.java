@@ -1,4 +1,8 @@
 package ru.tinkoff.edu.java.bot.server.request;
 
-public record LinkUpdateRequest(long id, String url, String description, long[] tgChatIds) {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record LinkUpdateRequest(String url,
+                                @JsonProperty("text_message") String textMessage,
+                                @JsonProperty("tg_chat_id") long tgChatId) {
 }
