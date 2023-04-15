@@ -11,6 +11,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 public record ApplicationConfig(@NotNull String test) {
     @Bean("scrapperWebClient")
     public WebClient makeScrapperWebClient() {
-        return WebClient.create("http://localhost:8080");
+        return WebClient.create("http://localhost:8081");
     }
 }

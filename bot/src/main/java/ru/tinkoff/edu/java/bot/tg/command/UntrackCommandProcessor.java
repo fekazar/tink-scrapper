@@ -15,7 +15,7 @@ public class UntrackCommandProcessor implements CommandProcessor {
 
     // This logic is similar to TrackCommandProcessor
     @Override
-    public String process(String command, String text) {
+    public String process(String command, String text, long chatId) {
         var words = new ArrayList<String>(Arrays.asList(text.split(" ")));
         int ind = words.indexOf("/" + UNTRACK_COM);
 

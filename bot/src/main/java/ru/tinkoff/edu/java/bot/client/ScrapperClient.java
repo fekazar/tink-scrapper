@@ -3,6 +3,7 @@ package ru.tinkoff.edu.java.bot.client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -29,13 +30,16 @@ public class ScrapperClient {
         this.client = client;
     }
 
-    public LinkResponse addLink(URL url) {
+    public LinkResponse addLink(URL url, long chatId) {
         var request = new AddLinkRequest(url);
         return client.post()
-                    .bodyValue(request)
-                    .retrieve()
-                    .bodyToMono(LinkResponse.class)
-                    .block();
+                .uri(uriBuilder -> uriBuilder.pathSegment("links").build())
+                .header("content-type", MediaType.APPLICATION_JSON_VALUE)
+                .header("tgChatId", String.valueOf(chatId))
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(LinkResponse.class)
+                .block();
     }
 
     public LinkResponse deleteLink(long tgChatId, URL url) {
@@ -49,7 +53,11 @@ public class ScrapperClient {
 
     public LinkResponse[] getLinks(long tgChatId) {
         return client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .pathSegment("links")
+                        .build())
                 .header("tgChatId", String.valueOf(tgChatId))
+                .header("Content-type", "application/json")
                 .retrieve()
                 .bodyToMono(LinkResponse[].class)
                 .block();
@@ -57,7 +65,10 @@ public class ScrapperClient {
 
     public void registerChat(long tgChatId) {
         client.post()
-                .uri(uriBuilder -> uriBuilder.pathSegment(String.valueOf(tgChatId)).build())
+                .uri(uriBuilder -> uriBuilder
+                        .pathSegment("tg-chat")
+                        .pathSegment(String.valueOf(tgChatId)).build())
+                .header("content-type", MediaType.APPLICATION_JSON_VALUE)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();

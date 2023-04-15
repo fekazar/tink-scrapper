@@ -15,7 +15,7 @@ public class CommandProcessorTest {
     @Test
     void check_help_processor_Test() {
         var helpProcessor = new HelpCommandProcessor();
-        assertEquals(HelpCommandProcessor.HELP_MSG, helpProcessor.process("help", "/help"));
+        assertEquals(HelpCommandProcessor.HELP_MSG, helpProcessor.process("help", "/help", 0));
     }
 
     @ParameterizedTest
@@ -23,13 +23,13 @@ public class CommandProcessorTest {
     void check_bad_url_track_processor_Test(String urlString) {
         var trackProcessor = new TrackCommandProcessor();
         assertEquals(TrackCommandProcessor.BAD_URL, trackProcessor.process("track",
-                String.format("/track %s", urlString)));
+                String.format("/track %s", urlString), 0));
     }
 
     @Test
     void check_no_url_track_processor_Test() {
         var trackProcessor = new TrackCommandProcessor();
-        assertEquals(TrackCommandProcessor.NO_URL, trackProcessor.process("track", "/track"));
+        assertEquals(TrackCommandProcessor.NO_URL, trackProcessor.process("track", "/track", 0));
     }
 
     @ParameterizedTest
@@ -37,13 +37,13 @@ public class CommandProcessorTest {
     void check_bad_url_untrack_processor_Test(String urlString) {
         var trackProcessor = new UntrackCommandProcessor();
         assertEquals(UntrackCommandProcessor.BAD_URL, trackProcessor.process("untrack",
-                String.format("/untrack %s", urlString)));
+                String.format("/untrack %s", urlString), 0));
     }
 
     @Test
     void check_no_url_untrack_processor_Test() {
         var trackProcessor = new UntrackCommandProcessor();
-        assertEquals(UntrackCommandProcessor.NO_URL, trackProcessor.process("ubtrack", "/untrack"));
+        assertEquals(UntrackCommandProcessor.NO_URL, trackProcessor.process("untrack", "/untrack", 0));
     }
 
     static Stream<String> badUrlStringSource() {

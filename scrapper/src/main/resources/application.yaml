@@ -4,6 +4,9 @@ app:
   scheduler:
     interval: 15000
 
+server:
+  port: 8081
+
 spring:
   liquibase:
     enabled: false
