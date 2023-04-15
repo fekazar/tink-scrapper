@@ -10,20 +10,20 @@ import java.util.List;
 
 // TODO: add url correctness check
 
-@Service
+@Service("jdbcLinkService")
 public class JdbcLinkService implements LinkService {
     @Autowired
     private JdbcScrapperRepository repository;
 
-    public void add(String url, int chatId) {
+    public void add(String url, long chatId) {
         repository.addLink(url, chatId);
     }
 
-    public void delete(String url, int chatId) {
+    public void delete(String url, long chatId) {
         repository.deleteLink(url, chatId);
     }
 
-    public List<LinkRecord> linksForChat(int chatId) {
+    public List<LinkRecord> linksForChat(long chatId) {
         return repository.getLinksForChat(chatId);
     }
 

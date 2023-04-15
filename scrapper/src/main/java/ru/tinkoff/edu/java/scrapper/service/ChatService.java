@@ -5,7 +5,7 @@ import ru.tinkoff.edu.java.scrapper.repository.ChatRecord;
 import java.util.List;
 
 public interface ChatService {
-    void add(int chatId);
-    void remove(int chatId);
+    void add(long chatId);
+    void remove(long chatId);
     List<ChatRecord> getAll();
 }

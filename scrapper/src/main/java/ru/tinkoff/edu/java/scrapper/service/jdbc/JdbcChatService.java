@@ -9,16 +9,16 @@ import ru.tinkoff.edu.java.scrapper.service.ChatService;
 
 import java.util.List;
 
-@Service
+@Service("jdbcChatService")
 public class JdbcChatService implements ChatService {
     @Autowired
     private JdbcScrapperRepository repository;
 
-    public void add(int chatId) {
+    public void add(long chatId) {
         repository.addChat(chatId);
     }
 
-    public void remove(int chatId) {
+    public void remove(long chatId) {
         repository.deleteChat(chatId);
     }
 
