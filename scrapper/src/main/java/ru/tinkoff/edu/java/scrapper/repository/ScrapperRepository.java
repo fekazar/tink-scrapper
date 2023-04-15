@@ -7,13 +7,13 @@ import java.util.List;
 public interface ScrapperRepository {
     List<ChatRecord> getAllChats();
     List<LinkRecord> getAllLinks();
-    List<LinkRecord> getLinksForChat(int chatId);
+    List<LinkRecord> getLinksForChat(long chatId);
 
-    boolean hasChat(int chatId);
+    boolean hasChat(long chatId);
 
-    void addChat(int chatId);
-    void addLink(String url, int chatId);
+    void addChat(long chatId);
+    void addLink(String url, long chatId);
 
-    void deleteChat(int chatId);
-    void deleteLink(String url, int chatId);
+    void deleteChat(long chatId);
+    void deleteLink(String url, long chatId);
 }

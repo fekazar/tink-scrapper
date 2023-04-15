@@ -35,7 +35,7 @@ public class JdbcScrapperRepository implements ScrapperRepository {
     }
 
     @Override
-    public List<LinkRecord> getLinksForChat(int chatId) {
+    public List<LinkRecord> getLinksForChat(long chatId) {
         return jdbcTemplate.query(
                 "select * from links where chat_id = :chatId",
                 Map.of("chatId", chatId),
@@ -44,7 +44,7 @@ public class JdbcScrapperRepository implements ScrapperRepository {
     }
 
     @Override
-    public boolean hasChat(int chatId) {
+    public boolean hasChat(long chatId) {
         return jdbcTemplate.queryForRowSet(
                 "select id from chats where id = :id",
                 Map.of("id", chatId)
@@ -52,23 +52,23 @@ public class JdbcScrapperRepository implements ScrapperRepository {
     }
 
     @Override
-    public void addChat(int chatId) {
+    public void addChat(long chatId) {
         jdbcTemplate.update(
                 "insert into chats (id) values (:chatId)",
                 Map.of("chatId", chatId));
     }
 
     @Override
-    public void addLink(String url, int chatId) {
+    public void addLink(String url, long chatId) {
         jdbcTemplate.update(
-                "insert into links (url, chat_id) values (:url, chatId)",
+                "insert into links (url, chat_id) values (:url, :chatId)",
                 Map.of("url", url,
                         "chatId", chatId)
         );
     }
 
     @Override
-    public void deleteChat(int chatId) {
+    public void deleteChat(long chatId) {
         jdbcTemplate.update(
                 "delete from chats where id = :id",
                 Map.of("id", chatId)
@@ -76,7 +76,7 @@ public class JdbcScrapperRepository implements ScrapperRepository {
     }
 
     @Override
-    public void deleteLink(String url, int chatId) {
+    public void deleteLink(String url, long chatId) {
         jdbcTemplate.update(
                 "delete from links where url = :url and chat_id = :chatId",
                 Map.of("url", url,
