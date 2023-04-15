@@ -4,11 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcScrapperRepository;
 import ru.tinkoff.edu.java.scrapper.repository.LinkRecord;
+import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
 import java.util.List;
 
+// TODO: add url correctness check
+
 @Service
-public class JdbcLinkService {
+public class JdbcLinkService implements LinkService {
     @Autowired
     private JdbcScrapperRepository repository;
 
