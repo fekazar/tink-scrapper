@@ -43,24 +43,28 @@ public class LinkUpdateScheduler {
             chatsByUrls.get(linkRec.url()).add(linkRec);
         }
 
-        try {
-            for (String url: chatsByUrls.keySet()) {
+        for (String url: chatsByUrls.keySet()) {
+            log.info("Scheduler processing: " + url);
+
+            try {
                 LinkRecord toProcess = chatsByUrls.get(url).get(0);
                 // TODO: make async
                 var result = processorMap.get(new URL(url).getHost()).process(toProcess);
                 linkService.setLastUpdate(url, result.linkRecord().lastUpdate());
 
-                for (var linkRec: chatsByUrls.get(url)) {
-                    if (result.linkRecord() != linkRec) {
+                if (result.linkRecord() != toProcess) {
+                    log.info("Some changes at: " + url);
+
+                    for (var linkRec : chatsByUrls.get(url)) {
                         sendMessage(new BotClient.RequestBody(result.description(), url, linkRec.chatId()));
                         log.info("Sending message to: " + linkRec.chatId());
-                    } else {
-                        log.info("No changes at: " + url);
                     }
+                } else {
+                    log.info("No changes at: " + url);
                 }
+            } catch (Exception e) {
+                log.error(e.getMessage());
             }
-        } catch (Exception e) {
-            log.error(e.getMessage());
         }
     }
 

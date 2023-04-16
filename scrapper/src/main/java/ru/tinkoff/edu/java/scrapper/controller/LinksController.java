@@ -37,6 +37,8 @@ public class LinksController {
     LinkResponse addLink(@RequestHeader long tgChatId,
                          @RequestBody AddLinkRequest request) {
         log.info("POST request to /links");
+        log.info("Link to add: " + request);
+
         linkService.add(request.url().toString(), tgChatId);
 
         return new LinkResponse(tgChatId, request.url());

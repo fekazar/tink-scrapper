@@ -10,13 +10,18 @@ import ru.tinkoff.edu.java.parser.Parser;
 import ru.tinkoff.edu.java.scrapper.client.BotClient;
 import ru.tinkoff.edu.java.scrapper.client.GithubClient;
 import ru.tinkoff.edu.java.scrapper.repository.LinkRecord;
+import ru.tinkoff.edu.java.scrapper.repository.jdbc.LinksRowMapper;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 @Slf4j
 @Component(GithubUrlProcessor.HOST)
 public class GithubUrlProcessor implements UrlProcessor {
+    public static OffsetDateTime DEFAULT_LAST_UPDATE = OffsetDateTime.of(1954, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
+
     public static final String HOST = "github.com";
 
     @Autowired
@@ -30,7 +35,7 @@ public class GithubUrlProcessor implements UrlProcessor {
         GithubParser.Result parsed = (GithubParser.Result) linkParser.parse(linkRecord.toURL());
         var res = githubClient.getRepository(parsed.user(), parsed.repository()).block();
 
-        if (res.updatedAt().isEqual(linkRecord.lastUpdate()))
+        if (res.updatedAt().isEqual(linkRecord.lastUpdate()) && !linkRecord.lastUpdate().isEqual(DEFAULT_LAST_UPDATE))
             return new Result(linkRecord, "No changes at github");
 
         log.info(res.updatedAt() + " - " + linkRecord.lastUpdate());
