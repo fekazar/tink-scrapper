@@ -18,5 +18,5 @@ public class GithubParser extends Parser {
         return new Result(path[1], path[2]);
     }
 
-    record Result(String user, String repository) implements ParseResult { }
+    public record Result(String user, String repository) implements ParseResult { }
 }

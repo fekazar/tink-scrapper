@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
+import ru.tinkoff.edu.java.parser.GithubParser;
+import ru.tinkoff.edu.java.parser.Parser;
+import ru.tinkoff.edu.java.parser.StackOverflowParser;
 import ru.tinkoff.edu.java.scrapper.client.GithubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.response.GithubRepository;
@@ -15,7 +18,7 @@ import ru.tinkoff.edu.java.scrapper.response.StackOverflowResponse;
 public class ClientConfiguration {
 
     @Bean
-    GithubClient getGithubClient() {
+    public GithubClient getGithubClient() {
         final var webClient = WebClient.builder()
                 .baseUrl("https://api.github.com/repos/")
                 .build();
@@ -30,7 +33,7 @@ public class ClientConfiguration {
     }
 
     @Bean
-    StackOverflowClient getStackOverflowclient() {
+    public StackOverflowClient getStackOverflowclient() {
         final var httpClient = HttpClient.create()
                 .baseUrl("https://api.stackexchange.com/2.3/questions")
                 .compress(true);
@@ -49,5 +52,12 @@ public class ClientConfiguration {
                 })
                 .retrieve()
                 .bodyToMono(StackOverflowResponse.class);
+    }
+
+    @Bean
+    public Parser getLinkParser() {
+        var parser = new GithubParser();
+        parser.setNext(new StackOverflowParser());
+        return parser;
     }
 }

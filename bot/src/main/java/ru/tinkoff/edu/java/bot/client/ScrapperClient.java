@@ -32,6 +32,7 @@ public class ScrapperClient {
 
     public LinkResponse addLink(URL url, long chatId) {
         var request = new AddLinkRequest(url);
+
         return client.post()
                 .uri(uriBuilder -> uriBuilder.pathSegment("links").build())
                 .header("content-type", MediaType.APPLICATION_JSON_VALUE)

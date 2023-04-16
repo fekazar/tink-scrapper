@@ -9,5 +9,6 @@ CREATE TABLE chats(
 CREATE TABLE links(
     id SERIAL PRIMARY KEY,
     url VARCHAR(2000) NOT NULL,
-    chat_id INTEGER REFERENCES chats (id)
+    chat_id INTEGER REFERENCES chats (id),
+    last_update TIMESTAMP WITH TIME ZONE DEFAULT '1954-01-01'
 )

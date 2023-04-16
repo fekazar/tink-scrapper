@@ -6,6 +6,8 @@ import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcScrapperRepository;
 import ru.tinkoff.edu.java.scrapper.repository.LinkRecord;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
+import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 // TODO: add url correctness check
@@ -29,5 +31,15 @@ public class JdbcLinkService implements LinkService {
 
     public List<LinkRecord> getAll() {
         return repository.getAllLinks();
+    }
+
+    @Override
+    public void updateLink(long linkId, LinkRecord newRecord) {
+        repository.updateLink(linkId, newRecord);
+    }
+
+    @Override
+    public void setLastUpdate(String url, OffsetDateTime date) {
+        repository.setLastUpdate(url, date);
     }
 }

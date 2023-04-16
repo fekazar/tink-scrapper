@@ -8,6 +8,8 @@ import ru.tinkoff.edu.java.scrapper.repository.ChatRecord;
 import ru.tinkoff.edu.java.scrapper.repository.LinkRecord;
 import ru.tinkoff.edu.java.scrapper.repository.ScrapperRepository;
 
+import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -81,6 +83,24 @@ public class JdbcScrapperRepository implements ScrapperRepository {
                 "delete from links where url = :url and chat_id = :chatId",
                 Map.of("url", url,
                         "chatId", chatId)
+        );
+    }
+
+    @Override
+    public void updateLink(long id, LinkRecord newRecord) {
+        jdbcTemplate.update(
+                "update links set url = :url, chat_id = :chatId, last_update = :lastUpdate",
+                Map.of("url", newRecord.url(),
+                        "chatId", newRecord.chatId(),
+                        "lastUpdate", newRecord.lastUpdate())
+        );
+    }
+
+    @Override
+    public void setLastUpdate(String url, OffsetDateTime date) {
+        jdbcTemplate.update(
+                "update links set last_update = :date where url = :url",
+                Map.of("date", date, "url", url)
         );
     }
 }

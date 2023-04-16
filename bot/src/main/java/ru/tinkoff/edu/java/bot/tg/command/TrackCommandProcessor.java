@@ -39,7 +39,7 @@ public class TrackCommandProcessor implements CommandProcessor {
             url = new URL(words.get(ind + 1));
             var res = scrapperClient.addLink(url, chatId);
             return "Link is tracking now: " + url;
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             return BAD_URL;
         }
     }
