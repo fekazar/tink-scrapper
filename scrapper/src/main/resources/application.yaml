@@ -2,7 +2,7 @@ app:
   test: 55
 
   scheduler:
-    interval: 15000
+    interval: 30000
 
 server:
   port: 8081

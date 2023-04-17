@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.OffsetDateTime;
 
-public record GithubRepository(@JsonProperty("updated_at") OffsetDateTime updatedAt) {
+public record GithubRepository(@JsonProperty("pushed_at") OffsetDateTime pushedAt) {
     public String getDescription() {
         var sb = new StringBuilder();
-        sb.append("Updated at: ").append(updatedAt);
+        sb.append("Pushed at: ").append(pushedAt);
         return sb.toString();
     }
 }

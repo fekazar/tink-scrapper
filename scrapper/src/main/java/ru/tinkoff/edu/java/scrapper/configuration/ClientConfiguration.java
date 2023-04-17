@@ -1,6 +1,10 @@
 package ru.tinkoff.edu.java.scrapper.configuration;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -14,12 +18,17 @@ import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.response.GithubRepository;
 import ru.tinkoff.edu.java.scrapper.response.StackOverflowResponse;
 
+@Slf4j
 @Component
+@PropertySource("classpath:secrets.properties")
 public class ClientConfiguration {
 
     @Bean
-    public GithubClient getGithubClient() {
+    public GithubClient getGithubClient(@Value("${secrets.github_api_key}") String githubApiKey) {
+        log.info("Github api token: " + githubApiKey);
+
         final var webClient = WebClient.builder()
+                .defaultHeader("authorization", githubApiKey)
                 .baseUrl("https://api.github.com/repos/")
                 .build();
 
