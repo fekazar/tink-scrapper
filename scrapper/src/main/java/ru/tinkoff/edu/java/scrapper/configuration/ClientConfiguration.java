@@ -16,6 +16,7 @@ import ru.tinkoff.edu.java.parser.StackOverflowParser;
 import ru.tinkoff.edu.java.scrapper.client.GithubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.response.GithubRepository;
+import ru.tinkoff.edu.java.scrapper.response.PullsResponse;
 import ru.tinkoff.edu.java.scrapper.response.StackOverflowResponse;
 
 @Slf4j
@@ -28,17 +29,35 @@ public class ClientConfiguration {
         log.info("Github api token: " + githubApiKey);
 
         final var webClient = WebClient.builder()
-                .defaultHeader("authorization", githubApiKey)
+                .defaultHeader("authorization", "Bearer " + githubApiKey)
                 .baseUrl("https://api.github.com/repos/")
                 .build();
 
-        return (user, repositoryName) -> webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .pathSegment(user)
-                        .pathSegment(repositoryName)
-                        .build())
-                .retrieve()
-                .bodyToMono(GithubRepository.class);
+        return (user, repositoryName) ->  {
+            PullsResponse[] pulls = webClient
+                    .get()
+                    .uri(uriBuilder -> uriBuilder
+                            .pathSegment(user)
+                            .pathSegment(repositoryName)
+                            .pathSegment("pulls")
+                            .build())
+                    .retrieve()
+                    .bodyToMono(PullsResponse[].class)
+                    .block();
+
+            var githubRepo = webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .pathSegment(user)
+                            .pathSegment(repositoryName)
+                            .build())
+                    .retrieve()
+                    .bodyToMono(GithubRepository.class)
+                    .block();
+
+            githubRepo.setPulls(pulls);
+            return githubRepo;
+        };
+
     }
 
     @Bean

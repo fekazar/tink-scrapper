@@ -7,6 +7,7 @@ import ru.tinkoff.edu.java.parser.GithubParser;
 import ru.tinkoff.edu.java.parser.Parser;
 import ru.tinkoff.edu.java.scrapper.client.GithubClient;
 import ru.tinkoff.edu.java.scrapper.repository.LinkRecord;
+import ru.tinkoff.edu.java.scrapper.response.PullsResponse;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -27,7 +28,12 @@ public class GithubUrlProcessor implements UrlProcessor {
     @Override
     public UrlProcessor.Result process(LinkRecord linkRecord) {
         GithubParser.Result parsed = (GithubParser.Result) linkParser.parse(linkRecord.toURL());
-        var res = githubClient.getRepository(parsed.user(), parsed.repository()).block();
+        var res = githubClient.getRepository(parsed.user(), parsed.repository());
+
+        // res.pulls shouldn't be null
+        System.out.println(res.getPulls().length);
+        for (PullsResponse pull: res.getPulls())
+            System.out.println(pull);
 
         if (res.pushedAt().isEqual(linkRecord.lastUpdate()) && !linkRecord.lastUpdate().isEqual(DEFAULT_LAST_UPDATE))
             return new Result(linkRecord, "No changes at github");
