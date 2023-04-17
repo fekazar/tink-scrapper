@@ -40,6 +40,7 @@ public class ClientConfiguration {
                             .pathSegment(user)
                             .pathSegment(repositoryName)
                             .pathSegment("pulls")
+                            .queryParam("state", "all")
                             .build())
                     .retrieve()
                     .bodyToMono(PullsResponse[].class)
