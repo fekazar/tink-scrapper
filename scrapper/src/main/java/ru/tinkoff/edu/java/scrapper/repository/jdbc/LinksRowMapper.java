@@ -3,6 +3,7 @@ package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import ru.tinkoff.edu.java.scrapper.repository.GithubLinkRecord;
 import ru.tinkoff.edu.java.scrapper.repository.LinkRecord;
 
 import java.sql.ResultSet;
@@ -19,10 +20,14 @@ public class LinksRowMapper implements RowMapper<LinkRecord> {
 
     @Override
     public LinkRecord mapRow(ResultSet rs, int rowNum) throws SQLException {
-        var res = new LinkRecord(
-                rs.getInt("id"),
-                rs.getString("url"),
-                rs.getInt("chat_id"));
+        LinkRecord res = switch (rs.getString("host_type")) {
+            case "github" -> new GithubLinkRecord();
+            default -> new LinkRecord();
+        };
+
+        res.setId(rs.getInt("id"));
+        res.setUrl(rs.getString("url"));
+        res.setChatId(rs.getInt("chat_id"));
 
         OffsetDateTime offsetDateTime = rs.getTimestamp("last_update").toLocalDateTime().atOffset(OffsetDateTime.now().getOffset());
         res.setLastUpdate(offsetDateTime);

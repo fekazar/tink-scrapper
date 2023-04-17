@@ -8,6 +8,7 @@ import ru.tinkoff.edu.java.scrapper.repository.ChatRecord;
 import ru.tinkoff.edu.java.scrapper.repository.LinkRecord;
 import ru.tinkoff.edu.java.scrapper.repository.ScrapperRepository;
 
+import java.sql.Struct;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -66,6 +67,15 @@ public class JdbcScrapperRepository implements ScrapperRepository {
                 "insert into links (url, chat_id) values (:url, :chatId)",
                 Map.of("url", url,
                         "chatId", chatId)
+        );
+    }
+
+    public void addTypedLink(String url, long chatId, String type) {
+        jdbcTemplate.update(
+                "insert into links (url, chat_id, host_type) values (:url, :chatId, :hostType)",
+                Map.of("url", url,
+                        "chatId", chatId,
+                        "hostType", type)
         );
     }
 

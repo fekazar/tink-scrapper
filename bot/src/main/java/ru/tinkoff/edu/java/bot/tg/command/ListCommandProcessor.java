@@ -34,7 +34,7 @@ public class ListCommandProcessor implements CommandProcessor {
             return res.toString();
         } catch (Exception e) {
             log.error(e.getMessage());
-            return "erorr";
+            return "Service unavailable.";
         }
     }
 }

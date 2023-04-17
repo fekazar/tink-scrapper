@@ -22,6 +22,6 @@ public class BotController {
     @PostMapping("/updates")
     void postUpdates(@RequestBody LinkUpdateRequest request) {
         log.info("POST request to /updates");
-        bot.sendTextMessage(String.format("%s\n %s", request.textMessage(), request.url()), request.tgChatId());
+        bot.sendTextMessage(request.textMessage(), request.tgChatId());
     }
 }

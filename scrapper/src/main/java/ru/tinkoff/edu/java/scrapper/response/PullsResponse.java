@@ -11,6 +11,9 @@ public class PullsResponse {
     private String title;
 
     @Getter
+    private String state;
+
+    @Getter
     public static class User {
         private String login;
     }

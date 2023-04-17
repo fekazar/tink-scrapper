@@ -1,15 +1,31 @@
 package ru.tinkoff.edu.java.scrapper.repository;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.OffsetDateTime;
 
 public class LinkRecord {
-    private final long id;
-    private final String url;
-    private final long chatId;
+    @Setter
+    protected long id;
 
-    private OffsetDateTime lastUpdate;
+    @Setter
+    protected String url;
+
+    @Setter
+    protected long chatId;
+
+    @Getter
+    @Setter
+    protected String hostType;
+
+    protected OffsetDateTime lastUpdate;
+
+    public LinkRecord() {
+
+    }
 
     public LinkRecord(long id, String url, long chatId) {
         this.id = id;

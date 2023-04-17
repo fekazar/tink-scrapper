@@ -50,13 +50,12 @@ public class LinkUpdateScheduler {
                 LinkRecord toProcess = chatsByUrls.get(url).get(0);
                 // TODO: make async
                 var result = processorMap.get(new URL(url).getHost()).process(toProcess);
-                linkService.setLastUpdate(url, result.linkRecord().lastUpdate());
 
-                if (result.linkRecord() != toProcess) {
+                if (result.hasChanges()) {
                     log.info("Some changes at: " + url);
 
                     for (var linkRec : chatsByUrls.get(url)) {
-                        sendMessage(new BotClient.RequestBody(result.description(), url, linkRec.chatId()));
+                        sendMessage(new BotClient.RequestBody(result.getDescription(), url, linkRec.chatId()));
                         log.info("Sending message to: " + linkRec.chatId());
                     }
                 } else {
