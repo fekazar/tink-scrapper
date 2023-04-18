@@ -1,10 +1,8 @@
 package ru.tinkoff.edu.java.scrapper.client.urlprocessor;
 
-import io.swagger.v3.oas.models.links.Link;
 import lombok.Getter;
 import lombok.Setter;
-import ru.tinkoff.edu.java.scrapper.client.BotClient;
-import ru.tinkoff.edu.java.scrapper.repository.LinkRecord;
+import ru.tinkoff.edu.java.scrapper.repository.records.LinkRecord;
 
 import java.util.ArrayList;
 import java.util.List;

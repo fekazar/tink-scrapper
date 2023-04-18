@@ -1,8 +1,7 @@
 package ru.tinkoff.edu.java.scrapper.service;
 
-import ru.tinkoff.edu.java.scrapper.repository.LinkRecord;
+import ru.tinkoff.edu.java.scrapper.repository.records.LinkRecord;
 
-import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
 

@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.parser.GithubParser;
 import ru.tinkoff.edu.java.parser.Parser;
 import ru.tinkoff.edu.java.scrapper.client.GithubClient;
-import ru.tinkoff.edu.java.scrapper.repository.GithubLinkRecord;
-import ru.tinkoff.edu.java.scrapper.repository.LinkRecord;
+import ru.tinkoff.edu.java.scrapper.repository.records.GithubLinkRecord;
+import ru.tinkoff.edu.java.scrapper.repository.records.LinkRecord;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcPullsRepository;
 import ru.tinkoff.edu.java.scrapper.response.PullsResponse;
 import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcLinkService;
@@ -39,38 +39,35 @@ public class GithubUrlProcessor implements UrlProcessor {
     @Override
     public UrlProcessor.Result process(LinkRecord linkRecord) {
         GithubParser.Result parsed = (GithubParser.Result) linkParser.parse(linkRecord.toURL());
-        var res = githubClient.getRepository(parsed.user(), parsed.repository());
+        var repository = githubClient.getRepository(parsed.user(), parsed.repository());
 
         var toReturn = new Result();
         toReturn.setLinkRecord(linkRecord);
 
         // res.pulls shouldn't be null
-        log.info("Pulls number: " + res.getPulls().length);
-        for (PullsResponse pull: res.getPulls())
+        log.info("Pulls number: " + repository.getPulls().length);
+        for (PullsResponse pull: repository.getPulls())
             log.info(String.valueOf(pull));
 
         log.info("Last update: " + linkRecord.lastUpdate());
-        log.info("Pushed at: " + res.pushedAt());
+        log.info("Pushed at: " + repository.pushedAt());
 
-        if (linkRecord.lastUpdate().isEqual(DEFAULT_LAST_UPDATE)) {
-            log.info("Link had default update: " + linkRecord.url());
-            linkService.setLastUpdate(linkRecord.url(), res.pushedAt());
-        } else if (!res.pushedAt().isEqual(linkRecord.lastUpdate())) {
+        if (!repository.pushedAt().isEqual(linkRecord.lastUpdate())) {
             toReturn.setChanged();
 
             toReturn.addUpdate("There is a new push at github.");
 
             var newRec = new LinkRecord(linkRecord.id(), linkRecord.url(), linkRecord.chatId());
-            newRec.setLastUpdate(res.pushedAt());
+            newRec.setLastUpdate(repository.pushedAt());
 
             toReturn.setLinkRecord(newRec);
             linkService.setLastUpdate(newRec.url(), newRec.lastUpdate());
         } else {
-            log.info("Times are equal: " + linkRecord.lastUpdate() + " " + res.pushedAt());
+            log.info("Times are equal: " + linkRecord.lastUpdate() + " " + repository.pushedAt());
         }
 
         var oldPulls = ((GithubLinkRecord) linkRecord).getPullsString();
-        var newPulls = buildBinaryString(res.getPulls());
+        var newPulls = buildBinaryString(repository.getPulls());
 
         if (!newPulls.equals(oldPulls)) {
             if (!oldPulls.isEmpty()) {

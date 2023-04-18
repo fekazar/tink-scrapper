@@ -1,23 +1,17 @@
 package ru.tinkoff.edu.java.scrapper;
 
-import io.swagger.v3.oas.models.links.Link;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.scrapper.client.BotClient;
-import ru.tinkoff.edu.java.scrapper.client.GithubClient;
-import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.client.urlprocessor.UrlProcessor;
-import ru.tinkoff.edu.java.scrapper.repository.LinkRecord;
+import ru.tinkoff.edu.java.scrapper.repository.records.LinkRecord;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
 import java.net.URL;
-import java.time.Duration;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -63,6 +57,7 @@ public class LinkUpdateScheduler {
                 }
             } catch (Exception e) {
                 log.error(e.getMessage());
+                e.printStackTrace();
             }
         }
     }

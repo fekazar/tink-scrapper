@@ -6,11 +6,15 @@ import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.parser.Parser;
 import ru.tinkoff.edu.java.parser.StackOverflowParser;
 import ru.tinkoff.edu.java.scrapper.client.BotClient;
-import ru.tinkoff.edu.java.scrapper.client.GithubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
-import ru.tinkoff.edu.java.scrapper.repository.LinkRecord;
+import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcScrapperRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcStackAnswersRepository;
+import ru.tinkoff.edu.java.scrapper.repository.records.AnswerRecord;
+import ru.tinkoff.edu.java.scrapper.repository.records.LinkRecord;
+import ru.tinkoff.edu.java.scrapper.response.AnswersResponse;
+import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
-import java.net.URL;
+import java.util.List;
 
 @Component(StackOverflowUrlProcessor.HOST)
 @Slf4j
@@ -24,22 +28,56 @@ public class StackOverflowUrlProcessor implements UrlProcessor {
     private StackOverflowClient stackOverflowClient;
 
     @Autowired
+    private JdbcStackAnswersRepository answersRepository;
+
+    @Autowired
+    private LinkService linkService;
+
+    @Autowired
     private BotClient botClient;
 
     @Override
     public Result process(LinkRecord linkRecord) {
-        var parsed = (StackOverflowParser.Result) linkParser.parse(linkRecord.toURL());
-        var updates = stackOverflowClient.getQuestions(parsed.id()).block();
+        var parsedLink = (StackOverflowParser.Result) linkParser.parse(linkRecord.toURL());
 
-        log.info(updates.items().get(0).lastActivityDate() + " - " + linkRecord.lastUpdate());
-        log.info(updates.items().get(0).lastActivityDate().toLocalDate() + " - " + linkRecord.lastUpdate().toLocalDate());
+        var newQuestion = stackOverflowClient.getQuestions(parsedLink.id()).items().get(0);
+        var oldAnswers = answersRepository.getAnswersFor(linkRecord.id());
+        var newAnswers = stackOverflowClient.getAnswers(parsedLink.id()).getAnswers();
 
-        if (updates.items().get(0).lastActivityDate().isEqual(linkRecord.lastUpdate()))
-            return new Result(linkRecord, "No changes at stackoverflow");
+        var res = new Result();
+        res.setLinkRecord(linkRecord);
 
-        var toReturn = new LinkRecord(linkRecord.id(), linkRecord.url(), linkRecord.chatId());
-        toReturn.setLastUpdate(updates.items().get(0).lastActivityDate());
+        for (var old: oldAnswers) {
+            if (!newAnswers.contains(old)) {
+                res.addUpdate(String.format("Answer '%s' was deleted.", old.getAnswerId())); // better set the answer Title
+                res.setChanged();
 
-        return new Result(toReturn, "There are new changes at stackoverflow"); // build more verbouse message
+                answersRepository.deleteAnswer(old.getAnswerId());
+                log.info("Deleted answer: " + old.getAnswerId());
+            }
+        }
+
+        for (var newAns: newAnswers) {
+            if (!oldAnswers.contains(newAns)) {
+                res.addUpdate(String.format("There is a new answer: %s.", newAns.getAnswerId()));
+                res.setChanged();
+
+                answersRepository.addAnswer(linkRecord.id(), newAns);
+                log.info("New answer: " + newAns.getAnswerId());
+            }
+        }
+
+        if (!linkRecord.lastUpdate().isEqual(newQuestion.lastActivityDate())) {
+            res.setChanged();
+            res.addUpdate("There changes at question: " + parsedLink.id());
+            log.info("Prev date: " + linkRecord.lastUpdate());
+
+            linkRecord.setLastUpdate(newQuestion.lastActivityDate());
+
+            linkService.updateLink(linkRecord.id(), linkRecord);
+            log.info("Changes at question: " + parsedLink.id());
+        }
+
+        return res;
     }
 }

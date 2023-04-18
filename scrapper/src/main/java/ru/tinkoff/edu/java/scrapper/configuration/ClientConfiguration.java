@@ -15,6 +15,7 @@ import ru.tinkoff.edu.java.parser.Parser;
 import ru.tinkoff.edu.java.parser.StackOverflowParser;
 import ru.tinkoff.edu.java.scrapper.client.GithubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
+import ru.tinkoff.edu.java.scrapper.response.AnswersResponse;
 import ru.tinkoff.edu.java.scrapper.response.GithubRepository;
 import ru.tinkoff.edu.java.scrapper.response.PullsResponse;
 import ru.tinkoff.edu.java.scrapper.response.StackOverflowResponse;
@@ -71,19 +72,40 @@ public class ClientConfiguration {
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
 
-        return ids -> webClient.get()
-                .uri(uriBuilder -> {
-                    for (long id: ids)
-                        uriBuilder.pathSegment(String.valueOf(id));
+        var client = new StackOverflowClient() {
+            @Override
+            public StackOverflowResponse getQuestions(long... ids) {
+                return webClient.get()
+                        .uri(uriBuilder -> {
+                            for (long id: ids)
+                                uriBuilder.pathSegment(String.valueOf(id));
 
-                    uriBuilder.queryParam("site", "stackoverflow");
-                    return uriBuilder.build();
-                })
-                .retrieve()
-                .bodyToMono(StackOverflowResponse.class);
+                            uriBuilder.queryParam("site", "stackoverflow");
+                            return uriBuilder.build();
+                        })
+                        .retrieve()
+                        .bodyToMono(StackOverflowResponse.class)
+                        .block();
+            }
+
+            @Override
+            public AnswersResponse getAnswers(long questionId) {
+                return webClient.get()
+                        .uri(uriBuilder -> uriBuilder.pathSegment(String.valueOf(questionId))
+                                .pathSegment("answers")
+                                .queryParam("site", "stackoverflow")
+                                .build()
+                        )
+                        .retrieve()
+                        .bodyToMono(AnswersResponse.class)
+                        .block();
+            }
+        };
+
+        return client;
     }
 
-    @Bean
+    @Bean("linkParser")
     public Parser getLinkParser() {
         var parser = new GithubParser();
         parser.setNext(new StackOverflowParser());

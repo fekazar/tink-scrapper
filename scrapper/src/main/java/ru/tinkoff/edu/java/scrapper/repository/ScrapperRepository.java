@@ -2,9 +2,9 @@ package ru.tinkoff.edu.java.scrapper.repository;
 
 // For the simplicity this repository is for the whole scrapper database
 
-import io.swagger.v3.oas.models.links.Link;
+import ru.tinkoff.edu.java.scrapper.repository.records.ChatRecord;
+import ru.tinkoff.edu.java.scrapper.repository.records.LinkRecord;
 
-import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
 

@@ -20,3 +20,9 @@ CREATE TABLE github_pulls(
     url VARCHAR(2000) NOT NULL,
     pulls_status VARCHAR(10000) DEFAULT ''
 )
+
+--changeset fyodor:4
+CREATE TABLE stackoverflow_answers(
+    answer_id INTEGER PRIMARY KEY,
+    link_id INTEGER REFERENCES links (id)
+)

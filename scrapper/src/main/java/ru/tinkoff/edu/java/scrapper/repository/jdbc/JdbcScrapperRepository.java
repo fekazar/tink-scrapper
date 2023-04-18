@@ -4,12 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-import ru.tinkoff.edu.java.scrapper.repository.ChatRecord;
-import ru.tinkoff.edu.java.scrapper.repository.LinkRecord;
+import ru.tinkoff.edu.java.scrapper.repository.records.ChatRecord;
+import ru.tinkoff.edu.java.scrapper.repository.records.LinkRecord;
 import ru.tinkoff.edu.java.scrapper.repository.ScrapperRepository;
 
-import java.sql.Struct;
-import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
@@ -70,13 +68,20 @@ public class JdbcScrapperRepository implements ScrapperRepository {
         );
     }
 
-    public void addTypedLink(String url, long chatId, String type) {
+    public void addTypedLink(LinkRecord linkRecord, String type) {
         jdbcTemplate.update(
-                "insert into links (url, chat_id, host_type) values (:url, :chatId, :hostType)",
-                Map.of("url", url,
-                        "chatId", chatId,
+                "insert into links (url, chat_id, last_update, host_type) values (:url, :chatId, :lastUpdate, :hostType)",
+                Map.of("url", linkRecord.url(),
+                        "chatId", linkRecord.chatId(),
+                        "lastUpdate", linkRecord.lastUpdate(),
                         "hostType", type)
         );
+    }
+
+    public long getLinkId(String url) {
+        return jdbcTemplate.queryForObject("select id from links where url = :url",
+                Map.of("url", url),
+                Long.class);
     }
 
     @Override

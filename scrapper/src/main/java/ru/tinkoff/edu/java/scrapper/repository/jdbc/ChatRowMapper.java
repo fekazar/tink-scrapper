@@ -2,7 +2,7 @@ package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import ru.tinkoff.edu.java.scrapper.repository.ChatRecord;
+import ru.tinkoff.edu.java.scrapper.repository.records.ChatRecord;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

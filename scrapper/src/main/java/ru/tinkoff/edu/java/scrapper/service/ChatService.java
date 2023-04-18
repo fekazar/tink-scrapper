@@ -1,6 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.service;
 
-import ru.tinkoff.edu.java.scrapper.repository.ChatRecord;
+import ru.tinkoff.edu.java.scrapper.repository.records.ChatRecord;
 
 import java.util.List;
 
