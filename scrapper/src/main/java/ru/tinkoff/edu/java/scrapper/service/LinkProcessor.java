@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.client.urlprocessor;
+package ru.tinkoff.edu.java.scrapper.service;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,11 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public interface UrlProcessor {
-    public static final String THREAD_POOL = "url_processor_pool";
+/*
+    This interface is part of service => it can inject only repositories.
+ */
+
+public interface LinkProcessor {
     Result process(Link linkRecord);
 
-    public static class Result {
+    class Result {
         @Getter
         @Setter
         private Link linkRecord;

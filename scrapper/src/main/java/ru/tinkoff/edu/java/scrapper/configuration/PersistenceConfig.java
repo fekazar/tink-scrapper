@@ -9,8 +9,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import ru.tinkoff.edu.java.scrapper.service.LinkProcessor;
+import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcGithubLinkProcessor;
+import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcStackOverflowLinkProcessor;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Configuration
@@ -33,5 +38,16 @@ public class PersistenceConfig {
     @Bean("scrapperJdbcTemplate")
     public NamedParameterJdbcTemplate getScrapperJdbcTemplate(@Qualifier("scrapperDataSource") DataSource dataSource) {
         return new NamedParameterJdbcTemplate(dataSource);
+    }
+
+    @Bean("jdbcLinkProcessors")
+    public Map<String, LinkProcessor> getJdbcLinkProcessors(JdbcGithubLinkProcessor githubLinkProcessor,
+                                                            JdbcStackOverflowLinkProcessor stackOverflowLinkProcessor) {
+        var res = new HashMap<String, LinkProcessor>();
+
+        res.put(JdbcGithubLinkProcessor.HOST, githubLinkProcessor);
+        res.put(JdbcStackOverflowLinkProcessor.HOST, stackOverflowLinkProcessor);
+
+        return res;
     }
 }

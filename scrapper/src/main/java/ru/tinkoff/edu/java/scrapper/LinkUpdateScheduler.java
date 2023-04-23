@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.scrapper.client.BotClient;
-import ru.tinkoff.edu.java.scrapper.client.urlprocessor.UrlProcessor;
+import ru.tinkoff.edu.java.scrapper.service.LinkProcessor;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
@@ -17,7 +17,7 @@ import java.util.*;
 @Component
 public class LinkUpdateScheduler {
     @Autowired
-    private Map<String, UrlProcessor> processorMap;
+    private Map<String, LinkProcessor> processorMap;
 
     @Autowired
     private LinkService linkService;
@@ -43,7 +43,8 @@ public class LinkUpdateScheduler {
             try {
                 Link toProcess = chatsByUrls.get(url).get(0);
                 // TODO: make async
-                var result = processorMap.get(new URL(url).getHost()).process(toProcess);
+                //var result = processorMap.get(new URL(url).getHost()).process(toProcess);
+                var result = linkService.process(toProcess);
 
                 if (result.hasChanges()) {
                     log.info("Some changes at: " + url);

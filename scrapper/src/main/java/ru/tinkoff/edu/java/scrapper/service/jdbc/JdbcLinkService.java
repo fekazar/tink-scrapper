@@ -17,12 +17,14 @@ import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.StackoverflowLink;
 import ru.tinkoff.edu.java.scrapper.response.AnswersResponse;
 import ru.tinkoff.edu.java.scrapper.response.StackOverflowResponse;
+import ru.tinkoff.edu.java.scrapper.service.LinkProcessor;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 // TODO: add url correctness check
@@ -44,6 +46,10 @@ public class JdbcLinkService implements LinkService {
 
     @Autowired
     private GithubClient githubClient;
+
+    @Autowired
+    @Qualifier("jdbcLinkProcessors")
+    private Map<String, LinkProcessor> linkProcessors;
 
     @Autowired
     @Qualifier("linkParser")
@@ -131,13 +137,18 @@ public class JdbcLinkService implements LinkService {
         return records;
     }
 
-    @Override
     public void updateLink(long linkId, Link newRecord) {
         repository.updateLink(linkId, newRecord);
     }
 
-    @Override
     public void setLastUpdate(String url, OffsetDateTime date) {
         repository.setLastUpdate(url, date);
+    }
+
+    @Override
+    public LinkProcessor.Result process(Link link) {
+        // find an appropriate processor
+        // inject Map of processors from configuration
+        return linkProcessors.get(link.toURL().getHost()).process(link);
     }
 }
