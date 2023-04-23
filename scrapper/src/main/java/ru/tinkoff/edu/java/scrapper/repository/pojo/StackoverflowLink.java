@@ -10,4 +10,7 @@ public class StackoverflowLink extends Link {
     @Setter
     @Getter
     private List<Answer> answers;
+
+    public StackoverflowLink() {
+    }
 }

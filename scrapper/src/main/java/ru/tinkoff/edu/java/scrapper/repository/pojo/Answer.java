@@ -4,6 +4,7 @@ package ru.tinkoff.edu.java.scrapper.repository.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,12 +19,12 @@ public class Answer {
     @JsonIgnore
     private int linkId;
 
+    public Answer() {
+    }
+
     public Answer(int answerId, int linkId) {
         this.answerId = answerId;
         this.linkId = linkId;
-    }
-
-    public Answer() {
     }
 
     @JsonProperty(value = "title")

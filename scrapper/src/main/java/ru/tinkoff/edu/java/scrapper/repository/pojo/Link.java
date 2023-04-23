@@ -24,7 +24,6 @@ public class Link {
     protected OffsetDateTime lastUpdate;
 
     public Link() {
-
     }
 
     public Link(long id, String url, long chatId) {
