@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.parser.GithubParser;
 import ru.tinkoff.edu.java.parser.Parser;
 import ru.tinkoff.edu.java.scrapper.client.GithubClient;
-import ru.tinkoff.edu.java.scrapper.repository.records.GithubLinkRecord;
-import ru.tinkoff.edu.java.scrapper.repository.records.LinkRecord;
+import ru.tinkoff.edu.java.scrapper.repository.pojo.GithubLink;
+import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcPullsRepository;
 import ru.tinkoff.edu.java.scrapper.response.PullsResponse;
 import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcLinkService;
@@ -37,7 +37,7 @@ public class GithubUrlProcessor implements UrlProcessor {
     private JdbcLinkService linkService;
 
     @Override
-    public UrlProcessor.Result process(LinkRecord linkRecord) {
+    public UrlProcessor.Result process(Link linkRecord) {
         GithubParser.Result parsed = (GithubParser.Result) linkParser.parse(linkRecord.toURL());
         var repository = githubClient.getRepository(parsed.user(), parsed.repository());
 
@@ -49,24 +49,24 @@ public class GithubUrlProcessor implements UrlProcessor {
         for (PullsResponse pull: repository.getPulls())
             log.info(String.valueOf(pull));
 
-        log.info("Last update: " + linkRecord.lastUpdate());
+        log.info("Last update: " + linkRecord.getLastUpdate());
         log.info("Pushed at: " + repository.pushedAt());
 
-        if (!repository.pushedAt().isEqual(linkRecord.lastUpdate())) {
+        if (!repository.pushedAt().isEqual(linkRecord.getLastUpdate())) {
             toReturn.setChanged();
 
             toReturn.addUpdate("There is a new push at github.");
 
-            var newRec = new LinkRecord(linkRecord.id(), linkRecord.url(), linkRecord.chatId());
+            var newRec = new Link(linkRecord.getId(), linkRecord.getUrl(), linkRecord.getChatId());
             newRec.setLastUpdate(repository.pushedAt());
 
             toReturn.setLinkRecord(newRec);
-            linkService.setLastUpdate(newRec.url(), newRec.lastUpdate());
+            linkService.setLastUpdate(newRec.getUrl(), newRec.getLastUpdate());
         } else {
-            log.info("Times are equal: " + linkRecord.lastUpdate() + " " + repository.pushedAt());
+            log.info("Times are equal: " + linkRecord.getLastUpdate() + " " + repository.pushedAt());
         }
 
-        var oldPulls = ((GithubLinkRecord) linkRecord).getPullsString();
+        var oldPulls = ((GithubLink) linkRecord).getPullsString();
         var newPulls = buildBinaryString(repository.getPulls());
 
         if (!newPulls.equals(oldPulls)) {
@@ -82,7 +82,7 @@ public class GithubUrlProcessor implements UrlProcessor {
             }
 
             // Whose responsibility to save new pulls string to database???
-            pullsRepository.updatePulls(linkRecord.url(), newPulls);
+            pullsRepository.updatePulls(linkRecord.getUrl(), newPulls);
         }
 
         return toReturn;

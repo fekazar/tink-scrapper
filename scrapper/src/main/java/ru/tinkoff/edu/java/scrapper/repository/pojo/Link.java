@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.repository.records;
+package ru.tinkoff.edu.java.scrapper.repository.pojo;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.OffsetDateTime;
 
-public class LinkRecord {
+public class Link {
     @Setter
     protected long id;
 
@@ -23,11 +23,11 @@ public class LinkRecord {
 
     protected OffsetDateTime lastUpdate;
 
-    public LinkRecord() {
+    public Link() {
 
     }
 
-    public LinkRecord(long id, String url, long chatId) {
+    public Link(long id, String url, long chatId) {
         this.id = id;
         this.url = url;
         this.chatId = chatId;
@@ -37,19 +37,19 @@ public class LinkRecord {
         this.lastUpdate = lastUpdate;
     }
 
-    public long id() {
+    public long getId() {
         return id;
     }
 
-    public String url() {
+    public String getUrl() {
         return url;
     }
 
-    public long chatId() {
+    public long getChatId() {
         return chatId;
     }
 
-    public OffsetDateTime lastUpdate() {
+    public OffsetDateTime getLastUpdate() {
         return lastUpdate;
     }
 
@@ -60,6 +60,4 @@ public class LinkRecord {
             throw new RuntimeException(e);
         }
     }
-
-
 }

@@ -2,7 +2,7 @@ package ru.tinkoff.edu.java.scrapper.service.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.tinkoff.edu.java.scrapper.repository.records.ChatRecord;
+import ru.tinkoff.edu.java.scrapper.repository.pojo.Chat;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcScrapperRepository;
 import ru.tinkoff.edu.java.scrapper.service.ChatService;
 
@@ -21,7 +21,7 @@ public class JdbcChatService implements ChatService {
         repository.deleteChat(chatId);
     }
 
-    public List<ChatRecord> getAll() {
+    public List<Chat> getAll() {
         return repository.getAllChats();
     }
 }

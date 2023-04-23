@@ -12,13 +12,8 @@ import ru.tinkoff.edu.java.scrapper.request.AddLinkRequest;
 import ru.tinkoff.edu.java.scrapper.request.RemoveLinkRequest;
 import ru.tinkoff.edu.java.scrapper.response.ApiErrorResponse;
 import ru.tinkoff.edu.java.scrapper.response.LinkResponse;
-import ru.tinkoff.edu.java.scrapper.service.ChatService;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
-import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcChatService;
-import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcLinkService;
 
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,7 +46,7 @@ public class LinksController {
 
         return linkService.linksForChat(tgChatId)
                 .stream()
-                .map(linkRecord -> new LinkResponse(linkRecord.id(), linkRecord.toURL()))
+                .map(linkRecord -> new LinkResponse(linkRecord.getId(), linkRecord.toURL()))
                 .collect(Collectors.toList());
     }
 

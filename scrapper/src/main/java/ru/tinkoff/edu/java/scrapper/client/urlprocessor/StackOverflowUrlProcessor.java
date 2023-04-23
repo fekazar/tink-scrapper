@@ -7,14 +7,9 @@ import ru.tinkoff.edu.java.parser.Parser;
 import ru.tinkoff.edu.java.parser.StackOverflowParser;
 import ru.tinkoff.edu.java.scrapper.client.BotClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcScrapperRepository;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcStackAnswersRepository;
-import ru.tinkoff.edu.java.scrapper.repository.records.AnswerRecord;
-import ru.tinkoff.edu.java.scrapper.repository.records.LinkRecord;
-import ru.tinkoff.edu.java.scrapper.response.AnswersResponse;
+import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
-
-import java.util.List;
 
 @Component(StackOverflowUrlProcessor.HOST)
 @Slf4j
@@ -37,11 +32,11 @@ public class StackOverflowUrlProcessor implements UrlProcessor {
     private BotClient botClient;
 
     @Override
-    public Result process(LinkRecord linkRecord) {
+    public Result process(Link linkRecord) {
         var parsedLink = (StackOverflowParser.Result) linkParser.parse(linkRecord.toURL());
 
         var newQuestion = stackOverflowClient.getQuestions(parsedLink.id()).items().get(0);
-        var oldAnswers = answersRepository.getAnswersFor(linkRecord.id());
+        var oldAnswers = answersRepository.getAnswersFor(linkRecord.getId());
         var newAnswers = stackOverflowClient.getAnswers(parsedLink.id()).getAnswers();
 
         var res = new Result();
@@ -62,19 +57,19 @@ public class StackOverflowUrlProcessor implements UrlProcessor {
                 res.addUpdate(String.format("There is a new answer: %s.", newAns.getAnswerId()));
                 res.setChanged();
 
-                answersRepository.addAnswer(linkRecord.id(), newAns);
+                answersRepository.addAnswer(linkRecord.getId(), newAns);
                 log.info("New answer: " + newAns.getAnswerId());
             }
         }
 
-        if (!linkRecord.lastUpdate().isEqual(newQuestion.lastActivityDate())) {
+        if (!linkRecord.getLastUpdate().isEqual(newQuestion.lastActivityDate())) {
             res.setChanged();
             res.addUpdate("There changes at question: " + parsedLink.id());
-            log.info("Prev date: " + linkRecord.lastUpdate());
+            log.info("Prev date: " + linkRecord.getLastUpdate());
 
             linkRecord.setLastUpdate(newQuestion.lastActivityDate());
 
-            linkService.updateLink(linkRecord.id(), linkRecord);
+            linkService.updateLink(linkRecord.getId(), linkRecord);
             log.info("Changes at question: " + parsedLink.id());
         }
 

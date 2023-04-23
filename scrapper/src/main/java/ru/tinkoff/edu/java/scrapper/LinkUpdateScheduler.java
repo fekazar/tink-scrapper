@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.scrapper.client.BotClient;
 import ru.tinkoff.edu.java.scrapper.client.urlprocessor.UrlProcessor;
-import ru.tinkoff.edu.java.scrapper.repository.records.LinkRecord;
+import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
 import java.net.URL;
@@ -27,21 +27,21 @@ public class LinkUpdateScheduler {
 
     @Scheduled(fixedRateString = "#{@getRateMillis}")
     void update() {
-        List<LinkRecord> toUpdate = linkService.getAll();
-        Map<String, ArrayList<LinkRecord>> chatsByUrls = new TreeMap<>();
+        List<Link> toUpdate = linkService.getAll();
+        Map<String, ArrayList<Link>> chatsByUrls = new TreeMap<>();
 
         for (var linkRec: toUpdate) {
-            if (!chatsByUrls.containsKey(linkRec.url()))
-                chatsByUrls.put(linkRec.url(), new ArrayList<>());
+            if (!chatsByUrls.containsKey(linkRec.getUrl()))
+                chatsByUrls.put(linkRec.getUrl(), new ArrayList<>());
 
-            chatsByUrls.get(linkRec.url()).add(linkRec);
+            chatsByUrls.get(linkRec.getUrl()).add(linkRec);
         }
 
         for (String url: chatsByUrls.keySet()) {
             log.info("Scheduler processing: " + url);
 
             try {
-                LinkRecord toProcess = chatsByUrls.get(url).get(0);
+                Link toProcess = chatsByUrls.get(url).get(0);
                 // TODO: make async
                 var result = processorMap.get(new URL(url).getHost()).process(toProcess);
 
@@ -49,8 +49,8 @@ public class LinkUpdateScheduler {
                     log.info("Some changes at: " + url);
 
                     for (var linkRec : chatsByUrls.get(url)) {
-                        sendMessage(new BotClient.RequestBody(result.getDescription(), url, linkRec.chatId()));
-                        log.info("Sending message to: " + linkRec.chatId());
+                        sendMessage(new BotClient.RequestBody(result.getDescription(), url, linkRec.getChatId()));
+                        log.info("Sending message to: " + linkRec.getChatId());
                     }
                 } else {
                     log.info("No changes at: " + url);

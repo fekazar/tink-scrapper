@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-import ru.tinkoff.edu.java.scrapper.repository.records.ChatRecord;
-import ru.tinkoff.edu.java.scrapper.repository.records.LinkRecord;
+import ru.tinkoff.edu.java.scrapper.repository.pojo.Chat;
+import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
 import ru.tinkoff.edu.java.scrapper.repository.ScrapperRepository;
 
 import java.time.OffsetDateTime;
@@ -26,17 +26,17 @@ public class JdbcScrapperRepository implements ScrapperRepository {
 
 
     @Override
-    public List<ChatRecord> getAllChats() {
+    public List<Chat> getAllChats() {
         return jdbcTemplate.query("select * from chats", chatRowMapper);
     }
 
     @Override
-    public List<LinkRecord> getAllLinks() {
+    public List<Link> getAllLinks() {
         return jdbcTemplate.query("select * from links", linksRowMapper);
     }
 
     @Override
-    public List<LinkRecord> getLinksForChat(long chatId) {
+    public List<Link> getLinksForChat(long chatId) {
         return jdbcTemplate.query(
                 "select * from links where chat_id = :chatId",
                 Map.of("chatId", chatId),
@@ -68,12 +68,12 @@ public class JdbcScrapperRepository implements ScrapperRepository {
         );
     }
 
-    public void addTypedLink(LinkRecord linkRecord, String type) {
+    public void addTypedLink(Link linkRecord, String type) {
         jdbcTemplate.update(
                 "insert into links (url, chat_id, last_update, host_type) values (:url, :chatId, :lastUpdate, :hostType)",
-                Map.of("url", linkRecord.url(),
-                        "chatId", linkRecord.chatId(),
-                        "lastUpdate", linkRecord.lastUpdate(),
+                Map.of("url", linkRecord.getUrl(),
+                        "chatId", linkRecord.getChatId(),
+                        "lastUpdate", linkRecord.getLastUpdate(),
                         "hostType", type)
         );
     }
@@ -102,12 +102,12 @@ public class JdbcScrapperRepository implements ScrapperRepository {
     }
 
     @Override
-    public void updateLink(long id, LinkRecord newRecord) {
+    public void updateLink(long id, Link newRecord) {
         jdbcTemplate.update(
                 "update links set url = :url, chat_id = :chatId, last_update = :lastUpdate",
-                Map.of("url", newRecord.url(),
-                        "chatId", newRecord.chatId(),
-                        "lastUpdate", newRecord.lastUpdate())
+                Map.of("url", newRecord.getUrl(),
+                        "chatId", newRecord.getChatId(),
+                        "lastUpdate", newRecord.getLastUpdate())
         );
     }
 

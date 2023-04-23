@@ -1,6 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.service;
 
-import ru.tinkoff.edu.java.scrapper.repository.records.LinkRecord;
+import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -8,8 +8,8 @@ import java.util.List;
 public interface LinkService {
     void add(String url, long chatId);
     void delete(String url, long chatId);
-    List<LinkRecord> linksForChat(long chatId);
-    List<LinkRecord> getAll();
-    void updateLink(long linkId, LinkRecord newRecord);
+    List<Link> linksForChat(long chatId);
+    List<Link> getAll();
+    void updateLink(long linkId, Link newRecord);
     void setLastUpdate(String url, OffsetDateTime date);
 }

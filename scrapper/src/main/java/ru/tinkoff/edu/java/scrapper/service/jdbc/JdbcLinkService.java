@@ -10,11 +10,11 @@ import ru.tinkoff.edu.java.parser.StackOverflowParser;
 import ru.tinkoff.edu.java.scrapper.client.GithubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcStackAnswersRepository;
-import ru.tinkoff.edu.java.scrapper.repository.records.GithubLinkRecord;
+import ru.tinkoff.edu.java.scrapper.repository.pojo.GithubLink;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcPullsRepository;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcScrapperRepository;
-import ru.tinkoff.edu.java.scrapper.repository.records.LinkRecord;
-import ru.tinkoff.edu.java.scrapper.repository.records.StackoverflowLinkRecord;
+import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
+import ru.tinkoff.edu.java.scrapper.repository.pojo.StackoverflowLink;
 import ru.tinkoff.edu.java.scrapper.response.AnswersResponse;
 import ru.tinkoff.edu.java.scrapper.response.StackOverflowResponse;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
@@ -56,7 +56,7 @@ public class JdbcLinkService implements LinkService {
             if ("github.com".equals(urlObj.getHost())) {
                 var parsedUrl = (GithubParser.Result) linkParser.parse(urlObj);
 
-                var newLinkRecord = new LinkRecord();
+                var newLinkRecord = new Link();
                 var githubRepo = githubClient.getRepository(parsedUrl.user(), parsedUrl.repository());
 
                 newLinkRecord.setUrl(url);
@@ -72,7 +72,7 @@ public class JdbcLinkService implements LinkService {
                 AnswersResponse answersResponse = stackOverflowClient.getAnswers(res.id());
                 StackOverflowResponse.Question stackQuestion = stackOverflowClient.getQuestions(res.id()).items().get(0); // shouldn't be null
 
-                var newLinkRecord = new LinkRecord();
+                var newLinkRecord = new Link();
 
                 newLinkRecord.setUrl(url);
                 newLinkRecord.setChatId(chatId);
@@ -98,31 +98,31 @@ public class JdbcLinkService implements LinkService {
         repository.deleteLink(url, chatId);
     }
 
-    public List<LinkRecord> linksForChat(long chatId) {
+    public List<Link> linksForChat(long chatId) {
         return getAll()
                 .stream()
-                .filter(linkRecord -> linkRecord.chatId() == chatId)
+                .filter(linkRecord -> linkRecord.getChatId() == chatId)
                 .collect(Collectors.toList());
     }
 
-    public List<LinkRecord> getAll() {
-        List<LinkRecord> records = repository.getAllLinks();
+    public List<Link> getAll() {
+        List<Link> records = repository.getAllLinks();
 
-        for (LinkRecord rec: records) {
+        for (Link rec: records) {
 
-            if (rec instanceof GithubLinkRecord ghRec) {
+            if (rec instanceof GithubLink ghRec) {
                 // set pulls string for this record
                 try {
-                    ghRec.setPullsString(pullsRepository.pullsStringForUrl(rec.url()));
+                    ghRec.setPullsString(pullsRepository.pullsStringForUrl(rec.getUrl()));
                 } catch (Exception e) {
-                    log.error("Error in requesting pull string for: " + rec.url());
+                    log.error("Error in requesting pull string for: " + rec.getUrl());
                     log.error(e.getMessage());
                 }
-            } else if (rec instanceof StackoverflowLinkRecord stackRec) {
+            } else if (rec instanceof StackoverflowLink stackRec) {
                 try {
-                    stackRec.setAnswers(stackAnswersRepository.getAnswersFor(stackRec.id()));
+                    stackRec.setAnswers(stackAnswersRepository.getAnswersFor(stackRec.getId()));
                 } catch (Exception e) {
-                    log.error("Error in requesting answers for: " + stackRec.url());
+                    log.error("Error in requesting answers for: " + stackRec.getUrl());
                     log.error(e.getMessage());
                 }
             }
@@ -132,7 +132,7 @@ public class JdbcLinkService implements LinkService {
     }
 
     @Override
-    public void updateLink(long linkId, LinkRecord newRecord) {
+    public void updateLink(long linkId, Link newRecord) {
         repository.updateLink(linkId, newRecord);
     }
 

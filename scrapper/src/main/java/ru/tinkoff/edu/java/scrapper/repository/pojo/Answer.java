@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.repository.records;
+package ru.tinkoff.edu.java.scrapper.repository.pojo;
 
 // Class to represent records from answers table.
 
@@ -11,23 +11,22 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class AnswerRecord {
+public class Answer {
     @JsonProperty("answer_id")
     private int answerId;
 
     @JsonIgnore
     private int linkId;
 
-    public AnswerRecord(int answerId, int linkId) {
+    public Answer(int answerId, int linkId) {
         this.answerId = answerId;
         this.linkId = linkId;
     }
 
-    public AnswerRecord() {
-
+    public Answer() {
     }
 
-    @JsonProperty(value = "title", required = false)
+    @JsonProperty(value = "title")
     private String title;
 
     @Override
@@ -35,7 +34,7 @@ public class AnswerRecord {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AnswerRecord that = (AnswerRecord) o;
+        Answer that = (Answer) o;
 
         return answerId == that.answerId;
     }

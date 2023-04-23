@@ -2,15 +2,15 @@ package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import ru.tinkoff.edu.java.scrapper.repository.records.ChatRecord;
+import ru.tinkoff.edu.java.scrapper.repository.pojo.Chat;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Component
-public class ChatRowMapper implements RowMapper<ChatRecord> {
+public class ChatRowMapper implements RowMapper<Chat> {
     @Override
-    public ChatRecord mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new ChatRecord(rs.getInt("id"));
+    public Chat mapRow(ResultSet rs, int rowNum) throws SQLException {
+        return new Chat(rs.getInt("id"));
     }
 }
