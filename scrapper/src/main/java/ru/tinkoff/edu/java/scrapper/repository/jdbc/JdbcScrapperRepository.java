@@ -6,14 +6,13 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.Chat;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
-import ru.tinkoff.edu.java.scrapper.repository.ScrapperRepository;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
 @Repository
-public class JdbcScrapperRepository implements ScrapperRepository {
+public class JdbcScrapperRepository {
     @Autowired
     @Qualifier("scrapperJdbcTemplate")
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -24,18 +23,14 @@ public class JdbcScrapperRepository implements ScrapperRepository {
     @Autowired
     private LinksRowMapper linksRowMapper;
 
-
-    @Override
     public List<Chat> getAllChats() {
         return jdbcTemplate.query("select * from chats", chatRowMapper);
     }
 
-    @Override
     public List<Link> getAllLinks() {
         return jdbcTemplate.query("select * from links", linksRowMapper);
     }
 
-    @Override
     public List<Link> getLinksForChat(long chatId) {
         return jdbcTemplate.query(
                 "select * from links where chat_id = :chatId",
@@ -44,7 +39,6 @@ public class JdbcScrapperRepository implements ScrapperRepository {
         );
     }
 
-    @Override
     public boolean hasChat(long chatId) {
         return jdbcTemplate.queryForRowSet(
                 "select id from chats where id = :id",
@@ -52,14 +46,12 @@ public class JdbcScrapperRepository implements ScrapperRepository {
         ).next();
     }
 
-    @Override
     public void addChat(long chatId) {
         jdbcTemplate.update(
                 "insert into chats (id) values (:chatId)",
                 Map.of("chatId", chatId));
     }
 
-    @Override
     public void addLink(String url, long chatId) {
         jdbcTemplate.update(
                 "insert into links (url, chat_id) values (:url, :chatId)",
@@ -84,7 +76,6 @@ public class JdbcScrapperRepository implements ScrapperRepository {
                 Long.class);
     }
 
-    @Override
     public void deleteChat(long chatId) {
         jdbcTemplate.update(
                 "delete from chats where id = :id",
@@ -92,7 +83,6 @@ public class JdbcScrapperRepository implements ScrapperRepository {
         );
     }
 
-    @Override
     public void deleteLink(String url, long chatId) {
         jdbcTemplate.update(
                 "delete from links where url = :url and chat_id = :chatId",
@@ -101,7 +91,6 @@ public class JdbcScrapperRepository implements ScrapperRepository {
         );
     }
 
-    @Override
     public void updateLink(long id, Link newRecord) {
         jdbcTemplate.update(
                 "update links set url = :url, chat_id = :chatId, last_update = :lastUpdate",
@@ -111,7 +100,6 @@ public class JdbcScrapperRepository implements ScrapperRepository {
         );
     }
 
-    @Override
     public void setLastUpdate(String url, OffsetDateTime date) {
         jdbcTemplate.update(
                 "update links set last_update = :date where url = :url",
