@@ -7,17 +7,18 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: make fetch type of pull requests list lazy
+
 @Entity
 @DiscriminatorValue("github")
 @Getter
 @Setter
 public class GithubLink extends Link {
-    // TODO: make a one 2 many relationship with PullRequest entity
 
     @Transient
     private String pullsString;
 
-    @OneToMany(orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "link_id")
     private List<PullRequest> pullRequests = new ArrayList<>();
 

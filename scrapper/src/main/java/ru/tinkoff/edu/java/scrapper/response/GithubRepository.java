@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import ru.tinkoff.edu.java.scrapper.repository.pojo.PullRequest;
 
 import java.time.OffsetDateTime;
 
@@ -17,7 +18,7 @@ public class GithubRepository {
     @JsonIgnore
     @Setter
     @Getter
-    private PullsResponse[] pulls;
+    private PullRequest[] pulls;
 
     public OffsetDateTime pushedAt() {
         return pushedAt;

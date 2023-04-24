@@ -26,7 +26,7 @@ public class Link {
     @Column(name = "host_type", insertable = false, updatable = false)
     protected String hostType;
 
-    @Column(name = "last_update", insertable = false, updatable = false)
+    @Column(name = "last_update")
     protected OffsetDateTime lastUpdate;
 
     public Link() {

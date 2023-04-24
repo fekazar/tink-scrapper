@@ -7,15 +7,15 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: change fetch of answers to lazy
+
 @Entity
 @DiscriminatorValue("stackoverflow")
 @Getter
 @Setter
 public class StackoverflowLink extends Link {
 
-    @Setter
-    @Getter
-    @OneToMany(fetch = FetchType.EAGER) // on delete cascade?
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "link_id")
     private List<Answer> answers = new ArrayList<>();
 

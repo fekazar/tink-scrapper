@@ -24,11 +24,12 @@ CREATE TABLE github_pulls(
 --changeset fyodor:4
 CREATE TABLE stackoverflow_answers(
     answer_id INTEGER PRIMARY KEY,
-    link_id INTEGER REFERENCES links (id) ON DELETE CASCADE
+    link_id INTEGER REFERENCES links (id)
 )
 
 --changeset fyodor:5
 CREATE TABLE pull_requests(
-    request_id INTEGER PRIMARY KEY,
-    link_id INTEGER REFERENCES links (id) ON DELETE CASCADE
+    id INTEGER PRIMARY KEY,
+    link_id INTEGER REFERENCES links (id),
+    state VARCHAR(30)
 )

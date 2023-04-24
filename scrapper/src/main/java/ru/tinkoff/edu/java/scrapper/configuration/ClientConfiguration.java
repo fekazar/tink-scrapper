@@ -2,22 +2,20 @@ package ru.tinkoff.edu.java.scrapper.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 import ru.tinkoff.edu.java.parser.GithubParser;
 import ru.tinkoff.edu.java.parser.Parser;
 import ru.tinkoff.edu.java.parser.StackOverflowParser;
 import ru.tinkoff.edu.java.scrapper.client.GithubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
+import ru.tinkoff.edu.java.scrapper.repository.pojo.PullRequest;
 import ru.tinkoff.edu.java.scrapper.response.AnswersResponse;
 import ru.tinkoff.edu.java.scrapper.response.GithubRepository;
-import ru.tinkoff.edu.java.scrapper.response.PullsResponse;
 import ru.tinkoff.edu.java.scrapper.response.StackOverflowResponse;
 
 @Slf4j
@@ -35,7 +33,7 @@ public class ClientConfiguration {
                 .build();
 
         return (user, repositoryName) ->  {
-            PullsResponse[] pulls = webClient
+            PullRequest[] pulls = webClient
                     .get()
                     .uri(uriBuilder -> uriBuilder
                             .pathSegment(user)
@@ -44,7 +42,7 @@ public class ClientConfiguration {
                             .queryParam("state", "all")
                             .build())
                     .retrieve()
-                    .bodyToMono(PullsResponse[].class)
+                    .bodyToMono(PullRequest[].class)
                     .block();
 
             var githubRepo = webClient.get()
