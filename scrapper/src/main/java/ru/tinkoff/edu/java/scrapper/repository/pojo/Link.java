@@ -1,5 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.repository.pojo;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,20 +8,25 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.OffsetDateTime;
 
+@Entity(name = "links")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "host_type")
+@Getter
+@Setter
 public class Link {
-    @Setter
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected long id;
 
-    @Setter
     protected String url;
 
-    @Setter
+    @Column(name = "chat_id")
     protected long chatId;
 
-    @Getter
-    @Setter
+    @Column(name = "host_type", insertable = false, updatable = false)
     protected String hostType;
 
+    @Column(name = "last_update", insertable = false, updatable = false)
     protected OffsetDateTime lastUpdate;
 
     public Link() {

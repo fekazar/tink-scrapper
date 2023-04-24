@@ -26,3 +26,9 @@ CREATE TABLE stackoverflow_answers(
     answer_id INTEGER PRIMARY KEY,
     link_id INTEGER REFERENCES links (id) ON DELETE CASCADE
 )
+
+--changeset fyodor:5
+CREATE TABLE pull_requests(
+    request_id INTEGER PRIMARY KEY,
+    link_id INTEGER REFERENCES links (id) ON DELETE CASCADE
+)

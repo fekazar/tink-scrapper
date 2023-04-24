@@ -4,19 +4,26 @@ package ru.tinkoff.edu.java.scrapper.repository.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+@Entity(name = "stackoverflow_answers")
 @Getter
 @Setter
 @AllArgsConstructor
 public class Answer {
     @JsonProperty("answer_id")
+    @Id
+    @Column(name = "answer_id")
     private int answerId;
 
     @JsonIgnore
+
+    @Column(name = "link_id")
     private int linkId;
 
     public Answer() {
