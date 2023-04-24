@@ -11,7 +11,6 @@ import ru.tinkoff.edu.java.scrapper.client.GithubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcStackAnswersRepository;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.GithubLink;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcPullsRepository;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcScrapperRepository;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.StackoverflowLink;
@@ -34,9 +33,6 @@ import java.util.stream.Collectors;
 public class JdbcLinkService implements LinkService {
     @Autowired
     private JdbcScrapperRepository repository;
-
-    @Autowired
-    private JdbcPullsRepository pullsRepository;
 
     @Autowired
     private JdbcStackAnswersRepository stackAnswersRepository;
@@ -70,6 +66,8 @@ public class JdbcLinkService implements LinkService {
                 newLinkRecord.setLastUpdate(githubRepo.pushedAt());
 
                 repository.addTypedLink(newLinkRecord, "github");
+
+                log.warn("Working with github links with jdbc. Some functionality is not implemented, may cause bugs.");
             } else if ("stackoverflow.com".equals(urlObj.getHost())) {
                 var res = (StackOverflowParser.Result) linkParser.parse(urlObj);
                 if (res == null)
@@ -93,8 +91,6 @@ public class JdbcLinkService implements LinkService {
             } else {
                 repository.addLink(url, chatId);
             }
-
-            pullsRepository.createNewPullString(url);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
@@ -122,13 +118,7 @@ public class JdbcLinkService implements LinkService {
         for (Link rec: records) {
 
             if (rec instanceof GithubLink ghRec) {
-                // set pulls string for this record
-                try {
-                    ghRec.setPullsString(pullsRepository.pullsStringForUrl(rec.getUrl()));
-                } catch (Exception e) {
-                    log.error("Error in requesting pull string for: " + rec.getUrl());
-                    log.error(e.getMessage());
-                }
+                log.error("No pull requests are pulled for this link. Implementation will be later.");
             } else if (rec instanceof StackoverflowLink stackRec) {
                 try {
                     stackRec.setAnswers(stackAnswersRepository.getAnswersFor(stackRec.getId()));
@@ -140,14 +130,6 @@ public class JdbcLinkService implements LinkService {
         }
 
         return records;
-    }
-
-    public void updateLink(long linkId, Link newRecord) {
-        repository.updateLink(linkId, newRecord);
-    }
-
-    public void setLastUpdate(String url, OffsetDateTime date) {
-        repository.setLastUpdate(url, date);
     }
 
     @Override

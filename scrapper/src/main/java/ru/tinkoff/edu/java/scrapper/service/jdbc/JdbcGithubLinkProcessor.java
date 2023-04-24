@@ -12,6 +12,7 @@ import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcPullsRepository;
 import ru.tinkoff.edu.java.scrapper.service.LinkProcessor;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Arrays;
@@ -40,31 +41,6 @@ public class JdbcGithubLinkProcessor implements LinkProcessor {
 
     @Override
     public LinkProcessor.Result process(Link linkRecord) {
-        GithubParser.Result parsed = (GithubParser.Result) linkParser.parse(linkRecord.toURL());
-        var repository = githubClient.getRepository(parsed.user(), parsed.repository());
-
-        var toReturn = new Result();
-        toReturn.setLinkRecord(linkRecord);
-
-        log.info("Last update: " + linkRecord.getLastUpdate());
-        log.info("Pushed at: " + repository.pushedAt());
-
-        if (!repository.pushedAt().isEqual(linkRecord.getLastUpdate())) {
-            toReturn.setChanged();
-
-            toReturn.addUpdate("There is a new push at github.");
-
-            var newRec = new Link(linkRecord.getId(), linkRecord.getUrl(), linkRecord.getChatId());
-            newRec.setLastUpdate(repository.pushedAt());
-
-            toReturn.setLinkRecord(newRec);
-            //linkService.setLastUpdate(newRec.getUrl(), newRec.getLastUpdate());
-            scrapperRepository.setLastUpdate(newRec.getUrl(), newRec.getLastUpdate());
-
-        } else {
-            log.info("Times are equal: " + linkRecord.getLastUpdate() + " " + repository.pushedAt());
-        }
-
-        return toReturn;
+        throw new UnsupportedOperationException("Github links processing is not implemented in Jdbc yet.");
     }
 }

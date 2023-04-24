@@ -46,12 +46,12 @@ public class LinkUpdateScheduler {
             try {
                 Link toProcess = chatsByUrls.get(url).get(0);
                 // TODO: make async
-                //var result = processorMap.get(new URL(url).getHost()).process(toProcess);
                 var result = linkService.process(toProcess);
 
                 if (result.hasChanges()) {
                     log.info("Some changes at: " + url);
 
+                    // Are "unsafe" entities used in this list? Shouldn't there be an updated link after saving to database?
                     for (var linkRec : chatsByUrls.get(url)) {
                         sendMessage(new BotClient.RequestBody(result.getDescription(), url, linkRec.getChatId()));
                         log.info("Sending message to: " + linkRec.getChatId());
