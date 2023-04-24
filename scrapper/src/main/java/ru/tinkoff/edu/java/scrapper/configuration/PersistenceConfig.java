@@ -16,6 +16,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import ru.tinkoff.edu.java.scrapper.service.LinkProcessor;
 import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcGithubLinkProcessor;
 import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcStackOverflowLinkProcessor;
+import ru.tinkoff.edu.java.scrapper.service.jpa.JpaStackOverflowLinkProcessor;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -50,6 +51,15 @@ public class PersistenceConfig {
         var res = new HashMap<String, LinkProcessor>();
 
         res.put(JdbcGithubLinkProcessor.HOST, githubLinkProcessor);
+        res.put(JdbcStackOverflowLinkProcessor.HOST, stackOverflowLinkProcessor);
+
+        return res;
+    }
+
+    @Bean("jpaLinkProcessors")
+    public Map<String, LinkProcessor> getJpaLinkProcessors(JpaStackOverflowLinkProcessor stackOverflowLinkProcessor) {
+        var res = new HashMap<String, LinkProcessor>();
+
         res.put(JdbcStackOverflowLinkProcessor.HOST, stackOverflowLinkProcessor);
 
         return res;

@@ -1,9 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.repository.pojo;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +15,7 @@ public class StackoverflowLink extends Link {
 
     @Setter
     @Getter
-    @OneToMany() // on delete cascade?
+    @OneToMany(fetch = FetchType.EAGER) // on delete cascade?
     @JoinColumn(name = "link_id")
     private List<Answer> answers = new ArrayList<>();
 

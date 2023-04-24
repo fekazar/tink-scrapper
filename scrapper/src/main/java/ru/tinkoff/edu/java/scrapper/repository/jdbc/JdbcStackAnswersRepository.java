@@ -17,7 +17,7 @@ public class JdbcStackAnswersRepository {
         return jdbcTemplate.query(
                 "select * from stackoverflow_answers where link_id = :linkId",
                 Map.of("linkId", linkId),
-                (rs, rowNum) -> new Answer(rs.getInt("answer_id"), rs.getInt("link_id")));
+                (rs, rowNum) -> new Answer(rs.getLong("answer_id"), rs.getLong("link_id")));
     }
 
     public void addAnswer(long linkId, Answer ans) {

@@ -34,6 +34,9 @@ public class JpaStackOverflowLinkProcessor implements LinkProcessor {
         var newQuestion = stackOverflowClient.getQuestions(parsedLink.id()).items().get(0);
         var newAnswers = stackOverflowClient.getAnswers(parsedLink.id()).getAnswers();
 
+        log.info("Old answers: " + sofLink.getAnswers());
+        log.info("New answers: " + newAnswers);
+
         var res = new Result();
         res.setLinkRecord(sofLink);
 
