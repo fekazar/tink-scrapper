@@ -1,0 +1,20 @@
+app:
+  test: 55
+  scheduler:
+    interval: 30000
+
+server:
+  port: 8081
+
+spring:
+  liquibase:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      show-sql: true
+
+logging:
+  level:
+    org:
+      hibernate: INFO

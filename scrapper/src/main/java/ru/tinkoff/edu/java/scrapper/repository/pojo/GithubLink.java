@@ -1,9 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.repository.pojo;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +14,7 @@ import java.util.List;
 public class GithubLink extends Link {
     // TODO: make a one 2 many relationship with PullRequest entity
 
+    @Transient
     private String pullsString;
 
     @OneToMany(orphanRemoval = true)
@@ -25,5 +23,6 @@ public class GithubLink extends Link {
 
     public GithubLink() {
         super();
+        hostType = "github";
     }
 }

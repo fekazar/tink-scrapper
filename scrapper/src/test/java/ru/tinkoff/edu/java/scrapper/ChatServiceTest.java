@@ -15,7 +15,7 @@ public class ChatServiceTest extends IntegrationEnvironment {
     void addTest() {
         chatService.add(1);
         assertEquals(1, chatService.getAll().size());
-        assertEquals(1, chatService.getAll().get(0).id());
+        assertEquals(1, chatService.getAll().get(0).getId());
     }
 
     @Test

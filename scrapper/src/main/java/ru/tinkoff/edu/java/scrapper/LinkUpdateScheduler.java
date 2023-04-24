@@ -2,6 +2,7 @@ package ru.tinkoff.edu.java.scrapper;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,8 @@ public class LinkUpdateScheduler {
     private Map<String, LinkProcessor> processorMap;
 
     @Autowired
+    //@Qualifier("jdbcLinkService")
+    @Qualifier("jpaLinkService")
     private LinkService linkService;
 
     @Autowired

@@ -7,6 +7,7 @@ import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,10 +18,12 @@ public class StackoverflowLink extends Link {
 
     @Setter
     @Getter
-    @OneToMany(orphanRemoval = true)
+    @OneToMany() // on delete cascade?
     @JoinColumn(name = "link_id")
-    private List<Answer> answers;
+    private List<Answer> answers = new ArrayList<>();
 
     public StackoverflowLink() {
+        super();
+        hostType = "stackoverflow";
     }
 }
