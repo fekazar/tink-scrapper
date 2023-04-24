@@ -104,6 +104,11 @@ public class JdbcLinkService implements LinkService {
         repository.deleteLink(url, chatId);
     }
 
+    @Override
+    public void delete(long linkId) {
+        throw new UnsupportedOperationException("Delete by id id not implemented in jdbc yet.");
+    }
+
     public List<Link> linksForChat(long chatId) {
         return getAll()
                 .stream()

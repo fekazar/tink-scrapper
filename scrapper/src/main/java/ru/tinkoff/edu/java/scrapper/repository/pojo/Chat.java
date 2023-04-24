@@ -13,12 +13,12 @@ import lombok.Setter;
 public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     public Chat() {
     }
 
-    public Chat(int id) {
+    public Chat(long id) {
         this.id = id;
     }
 }
