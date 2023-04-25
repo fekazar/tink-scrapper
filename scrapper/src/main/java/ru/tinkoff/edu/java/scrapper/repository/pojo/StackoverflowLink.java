@@ -15,7 +15,7 @@ import java.util.List;
 @Setter
 public class StackoverflowLink extends Link {
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
     @JoinColumn(name = "link_id")
     private List<Answer> answers = new ArrayList<>();
 

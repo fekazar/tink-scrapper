@@ -15,5 +15,7 @@ public interface JpaLinkRepository extends ListCrudRepository<Link, Long> {
     @Query(value = "select link from links link where TYPE(link) = StackoverflowLink")
     List<StackoverflowLink> findGithubLinks();
 
+    List<Link> findLinksByChatId(long chatId);
+
     void deleteByUrlAndChatId(String url, long chatId);
 }

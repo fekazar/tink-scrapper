@@ -45,36 +45,48 @@ public class JpaLinkService implements LinkService {
 
     @Override
     public void add(String url, long chatId) {
-        String host = null;
         try {
-            host = new URL(url).getHost();
+            URL urlObj = new URL(url);
+            String host = urlObj.getHost();
+            Link link = new Link();
+
+            if (linkParser.parse(urlObj) == null)
+                throw new IllegalArgumentException("Unsupported host.");
+
+            if ("github.com".equals(host)) {
+                link = new GithubLink();
+                var githubParsed = (GithubParser.Result) linkParser.parse(urlObj);
+                var ghRepo = githubClient.getRepository(githubParsed.user(), githubParsed.repository());
+                var pullRequests = List.of(ghRepo.getPulls());
+
+                var ghLink = (GithubLink) link;
+                ghLink.setPullRequests(pullRequests);
+                ghLink.setLastUpdate(ghRepo.pushedAt());
+
+                log.info("Initial pull requests: " + pullRequests);
+            } else if ("stackoverflow.com".equals(host)) {
+                link = new StackoverflowLink();
+                var sofParsed = (StackOverflowParser.Result) linkParser.parse(urlObj);
+                var sofUpdates = stackOverflowClient.getQuestions(sofParsed.id()).items().get(0);
+                var answersResponse = stackOverflowClient.getAnswers(sofParsed.id());
+
+                var sofLink = (StackoverflowLink) link;
+                sofLink.setAnswers(answersResponse.getAnswers());
+                sofLink.setLastUpdate(sofUpdates.lastActivityDate());
+
+                log.info("Initial answers: " + answersResponse.getAnswers());
+            }
+
+            link.setChatId(chatId);
+            link.setUrl(url);
+
+            linkRepository.save(link);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
-
-        Link link = new Link();
-
-        if ("github.com".equals(host)) {
-            link = new GithubLink();
-            var githubParsed = (GithubParser.Result) linkParser.parse(link.toURL());
-            var pullRequests = List.of(githubClient.getRepository(githubParsed.user(), githubParsed.repository()).getPulls());
-            ((GithubLink) link).setPullRequests(pullRequests);
-
-            log.info("Initial pull requests: " + pullRequests);
-        } else if ("stackoverflow.com".equals(host)) {
-            link = new StackoverflowLink();
-            var sofParsed = (StackOverflowParser.Result) linkParser.parse(link.toURL());
-            var answersResponse = stackOverflowClient.getAnswers(sofParsed.id());
-            ((StackoverflowLink) link).setAnswers(answersResponse.getAnswers());
-
-            log.info("Initial answers: " + answersResponse.getAnswers());
-        }
-
-        link.setChatId(chatId);
-        link.setUrl(url);
-
-        linkRepository.save(link);
     }
+
+    // What happens with existing entity objects that represent links with these keys?
 
     @Override
     public void delete(String url, long chatId) {
@@ -88,7 +100,7 @@ public class JpaLinkService implements LinkService {
 
     @Override
     public List<Link> linksForChat(long chatId) {
-        return null;
+        return linkRepository.findLinksByChatId(chatId);
     }
 
     @Override
@@ -98,7 +110,6 @@ public class JpaLinkService implements LinkService {
 
     @Override
     public LinkProcessor.Result process(Link link) {
-        //throw new UnsupportedOperationException("Link processing is not implemented in jpa yet.");
         return linkProcessors.get(link.toURL().getHost()).process(link);
     }
 }

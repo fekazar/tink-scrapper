@@ -17,7 +17,7 @@ CREATE TABLE links(
 --changeset fyodor:3
 CREATE TABLE stackoverflow_answers(
     answer_id INTEGER PRIMARY KEY,
-    link_id INTEGER REFERENCES links (id)
+    link_id INTEGER REFERENCES links (id) ON DELETE CASCADE
 )
 
 --changeset fyodor:4

@@ -7,8 +7,6 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: make fetch type of pull requests list lazy
-
 @Entity
 @DiscriminatorValue("github")
 @Getter
