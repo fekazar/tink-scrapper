@@ -1,9 +1,15 @@
 package ru.tinkoff.edu.java.scrapper.service.jpa;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import ru.tinkoff.edu.java.parser.GithubParser;
+import ru.tinkoff.edu.java.parser.Parser;
+import ru.tinkoff.edu.java.parser.StackOverflowParser;
+import ru.tinkoff.edu.java.scrapper.client.GithubClient;
+import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.repository.jpa.JpaLinkRepository;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.GithubLink;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
@@ -17,10 +23,21 @@ import java.util.List;
 import java.util.Map;
 
 @Service("jpaLinkService")
+@Slf4j
 public class JpaLinkService implements LinkService {
 
     @Autowired
     private JpaLinkRepository linkRepository;
+
+    @Autowired
+    private StackOverflowClient stackOverflowClient;
+
+    @Autowired
+    private GithubClient githubClient;
+
+    @Autowired
+    @Qualifier("linkParser")
+    private Parser linkParser;
 
     @Autowired
     @Qualifier("jpaLinkProcessors")
@@ -34,14 +51,27 @@ public class JpaLinkService implements LinkService {
             throw new RuntimeException(e);
         }
 
-        Link link = switch (host) {
-            case "github.com" -> new GithubLink();
-            case "stackoverflow.com" -> new StackoverflowLink();
-            default -> new Link();
-        };
+        Link link = new Link();
+
+        if ("github.com".equals(host)) {
+            link = new GithubLink();
+            var githubParsed = (GithubParser.Result) linkParser.parse(link.toURL());
+            var pullRequests = List.of(githubClient.getRepository(githubParsed.user(), githubParsed.repository()).getPulls());
+            ((GithubLink) link).setPullRequests(pullRequests);
+
+            log.info("Initial pull requests: " + pullRequests);
+        } else if ("stackoverflow.com".equals(host)) {
+            link = new StackoverflowLink();
+            var sofParsed = (StackOverflowParser.Result) linkParser.parse(link.toURL());
+            var answersResponse = stackOverflowClient.getAnswers(sofParsed.id());
+            ((StackoverflowLink) link).setAnswers(answersResponse.getAnswers());
+
+            log.info("Initial answers: " + answersResponse.getAnswers());
+        }
 
         link.setChatId(chatId);
         link.setUrl(url);
+
         linkRepository.save(link);
     }
 
