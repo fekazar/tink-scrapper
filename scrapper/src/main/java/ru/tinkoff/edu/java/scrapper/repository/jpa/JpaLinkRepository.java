@@ -9,8 +9,6 @@ import ru.tinkoff.edu.java.scrapper.repository.pojo.StackoverflowLink;
 
 import java.util.List;
 
-// Mark this class annotated as repository or define in configuration
-
 public interface JpaLinkRepository extends ListCrudRepository<Link, Long> {
     // TODO: writer queries to get concrete objects
 

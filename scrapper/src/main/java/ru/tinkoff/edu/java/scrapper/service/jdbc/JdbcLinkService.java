@@ -3,15 +3,14 @@ package ru.tinkoff.edu.java.scrapper.service.jdbc;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.parser.GithubParser;
 import ru.tinkoff.edu.java.parser.Parser;
 import ru.tinkoff.edu.java.parser.StackOverflowParser;
 import ru.tinkoff.edu.java.scrapper.client.GithubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
+import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcScrapperRepository;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcStackAnswersRepository;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.GithubLink;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcScrapperRepository;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.StackoverflowLink;
 import ru.tinkoff.edu.java.scrapper.response.AnswersResponse;
@@ -21,35 +20,39 @@ import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 // TODO: add url correctness check
 
-@Service("jdbcLinkService")
 @Slf4j
 public class JdbcLinkService implements LinkService {
-    @Autowired
     private JdbcScrapperRepository repository;
 
-    @Autowired
     private JdbcStackAnswersRepository stackAnswersRepository;
 
-    @Autowired
     private StackOverflowClient stackOverflowClient;
 
-    @Autowired
     private GithubClient githubClient;
 
-    @Autowired
-    @Qualifier("jdbcLinkProcessors")
     private Map<String, LinkProcessor> linkProcessors;
 
-    @Autowired
-    @Qualifier("linkParser")
     private Parser linkParser;
+
+    public JdbcLinkService(JdbcScrapperRepository repository,
+                           JdbcStackAnswersRepository stackAnswersRepository,
+                           StackOverflowClient stackOverflowClient,
+                           GithubClient githubClient,
+                           Map<String, LinkProcessor> linkProcessors,
+                           Parser linkParser) {
+        this.repository = repository;
+        this.stackAnswersRepository = stackAnswersRepository;
+        this.stackOverflowClient = stackOverflowClient;
+        this.githubClient = githubClient;
+        this.linkProcessors = linkProcessors;
+        this.linkParser = linkParser;
+    }
 
     public void add(String url, long chatId) {
         try {

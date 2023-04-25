@@ -2,7 +2,6 @@ package ru.tinkoff.edu.java.scrapper.service.jdbc;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.parser.Parser;
 import ru.tinkoff.edu.java.parser.StackOverflowParser;
 import ru.tinkoff.edu.java.scrapper.client.BotClient;
@@ -12,27 +11,32 @@ import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcStackAnswersRepository;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.StackoverflowLink;
 import ru.tinkoff.edu.java.scrapper.service.LinkProcessor;
-import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
 @Slf4j
-@Component
 public class JdbcStackOverflowLinkProcessor implements LinkProcessor {
     public static final String HOST = "stackoverflow.com";
 
-    @Autowired
     private Parser linkParser;
 
-    @Autowired
     private StackOverflowClient stackOverflowClient;
 
-    @Autowired
     private JdbcStackAnswersRepository answersRepository;
 
-    @Autowired
     private BotClient botClient;
 
-    @Autowired
     private JdbcScrapperRepository scrapperRepository;
+
+    public JdbcStackOverflowLinkProcessor(Parser linkParser,
+                                          StackOverflowClient stackOverflowClient,
+                                          JdbcStackAnswersRepository answersRepository,
+                                          BotClient botClient,
+                                          JdbcScrapperRepository scrapperRepository) {
+        this.linkParser = linkParser;
+        this.stackOverflowClient = stackOverflowClient;
+        this.answersRepository = answersRepository;
+        this.botClient = botClient;
+        this.scrapperRepository = scrapperRepository;
+    }
 
     @Override
     public Result process(Link linkRecord) {

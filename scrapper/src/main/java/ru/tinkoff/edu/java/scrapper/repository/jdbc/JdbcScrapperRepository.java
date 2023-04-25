@@ -11,7 +11,6 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
-@Repository
 public class JdbcScrapperRepository {
     @Autowired
     @Qualifier("scrapperJdbcTemplate")
@@ -22,6 +21,12 @@ public class JdbcScrapperRepository {
 
     @Autowired
     private LinksRowMapper linksRowMapper;
+
+    public JdbcScrapperRepository(NamedParameterJdbcTemplate jdbcTemplate, ChatRowMapper chatRowMapper, LinksRowMapper linksRowMapper) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.chatRowMapper = chatRowMapper;
+        this.linksRowMapper = linksRowMapper;
+    }
 
     public List<Chat> getAllChats() {
         return jdbcTemplate.query("select * from chats", chatRowMapper);

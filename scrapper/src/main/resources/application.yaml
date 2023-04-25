@@ -1,5 +1,6 @@
 app:
   test: 55
+  db-access-type: jpa
   scheduler:
     interval: 30000
 

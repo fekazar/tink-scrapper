@@ -8,10 +8,13 @@ import ru.tinkoff.edu.java.scrapper.repository.pojo.Answer;
 import java.util.List;
 import java.util.Map;
 
-@Repository
 public class JdbcStackAnswersRepository {
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
+
+    public JdbcStackAnswersRepository(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public List<Answer> getAnswersFor(long linkId) {
         return jdbcTemplate.query(

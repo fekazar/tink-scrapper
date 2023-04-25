@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
     consumes = "application/json")
 public class LinksController {
     @Autowired
-    @Qualifier("jdbcLinkService")
     private LinkService linkService;
 
     @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))

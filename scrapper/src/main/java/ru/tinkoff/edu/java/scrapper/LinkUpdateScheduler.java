@@ -18,11 +18,10 @@ import java.util.*;
 @Component
 public class LinkUpdateScheduler {
     @Autowired
+    @Qualifier("linkProcessorMap")
     private Map<String, LinkProcessor> processorMap;
 
     @Autowired
-    //@Qualifier("jdbcLinkService")
-    @Qualifier("jpaLinkService")
     private LinkService linkService;
 
     @Autowired

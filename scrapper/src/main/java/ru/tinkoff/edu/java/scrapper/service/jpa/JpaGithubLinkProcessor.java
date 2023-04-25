@@ -7,8 +7,6 @@ import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.parser.GithubParser;
 import ru.tinkoff.edu.java.parser.Parser;
 import ru.tinkoff.edu.java.scrapper.client.GithubClient;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcPullsRepository;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcScrapperRepository;
 import ru.tinkoff.edu.java.scrapper.repository.jpa.JpaLinkRepository;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.GithubLink;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
@@ -17,17 +15,18 @@ import ru.tinkoff.edu.java.scrapper.service.LinkProcessor;
 import java.util.List;
 
 @Slf4j
-@Component("jpaGithubLinkProcessor")
 public class JpaGithubLinkProcessor implements LinkProcessor {
-    @Autowired
-    @Qualifier("linkParser")
     private Parser linkParser;
 
-    @Autowired
     private GithubClient githubClient;
 
-    @Autowired
     private JpaLinkRepository linkRepository;
+
+    public JpaGithubLinkProcessor(Parser linkParser, GithubClient githubClient, JpaLinkRepository linkRepository) {
+        this.linkParser = linkParser;
+        this.githubClient = githubClient;
+        this.linkRepository = linkRepository;
+    }
 
     @Override
     public Result process(Link linkRecord) {

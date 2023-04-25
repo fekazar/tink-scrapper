@@ -22,26 +22,27 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-@Service("jpaLinkService")
 @Slf4j
 public class JpaLinkService implements LinkService {
 
-    @Autowired
     private JpaLinkRepository linkRepository;
 
-    @Autowired
     private StackOverflowClient stackOverflowClient;
 
-    @Autowired
     private GithubClient githubClient;
 
-    @Autowired
-    @Qualifier("linkParser")
     private Parser linkParser;
 
-    @Autowired
-    @Qualifier("jpaLinkProcessors")
     private Map<String, LinkProcessor> linkProcessors;
+
+    public JpaLinkService(JpaLinkRepository linkRepository, StackOverflowClient stackOverflowClient, GithubClient githubClient, Parser linkParser, Map<String, LinkProcessor> linkProcessors) {
+        this.linkRepository = linkRepository;
+        this.stackOverflowClient = stackOverflowClient;
+        this.githubClient = githubClient;
+        this.linkParser = linkParser;
+        this.linkProcessors = linkProcessors;
+    }
+
     @Override
     public void add(String url, long chatId) {
         String host = null;

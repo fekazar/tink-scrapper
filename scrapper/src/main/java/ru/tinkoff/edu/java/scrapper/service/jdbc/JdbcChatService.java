@@ -8,10 +8,12 @@ import ru.tinkoff.edu.java.scrapper.service.ChatService;
 
 import java.util.List;
 
-@Service("jdbcChatService")
 public class JdbcChatService implements ChatService {
-    @Autowired
     private JdbcScrapperRepository repository;
+
+    public JdbcChatService(JdbcScrapperRepository repository) {
+        this.repository = repository;
+    }
 
     public void add(long chatId) {
         repository.addChat(chatId);
