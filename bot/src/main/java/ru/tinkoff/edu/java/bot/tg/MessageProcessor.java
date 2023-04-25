@@ -54,7 +54,7 @@ public class MessageProcessor {
         if (!map.containsKey(command)) {
             return UNSUPPORTED_COMMAND;
         } else {
-            return map.get(command).process(command, msg.text());
+            return map.get(command).process(command, msg.text(), msg.chat().id());
         }
     }
 

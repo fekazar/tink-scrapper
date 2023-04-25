@@ -8,9 +8,7 @@ public class HelpCommandProcessor implements CommandProcessor {
     public static final String HELP_COM = "help";
 
     @Override
-    public String process(String command, String text) {
-        // TODO: return "help" messgage
-        // make these messages centralized
+    public String process(String command, String text, long chatId) {
         return HELP_MSG;
     }
 }

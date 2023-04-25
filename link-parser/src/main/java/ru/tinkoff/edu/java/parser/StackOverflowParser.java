@@ -22,5 +22,5 @@ public class StackOverflowParser extends Parser {
         }
     }
 
-    record Result (long id) implements ParseResult { }
+    public record Result (long id) implements ParseResult { }
 }
