@@ -1,6 +1,7 @@
 app:
   test: 55
   db-access-type: jpa
+  bot-client: rabbit
   scheduler:
     interval: 30000
 

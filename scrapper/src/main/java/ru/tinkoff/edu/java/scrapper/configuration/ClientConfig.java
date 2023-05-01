@@ -1,8 +1,10 @@
 package ru.tinkoff.edu.java.scrapper.configuration;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
@@ -16,6 +18,7 @@ import ru.tinkoff.edu.java.scrapper.client.GithubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.client.bot.BotClient;
 import ru.tinkoff.edu.java.scrapper.client.bot.HttpBotClient;
+import ru.tinkoff.edu.java.scrapper.client.bot.RabbitBotClient;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.PullRequest;
 import ru.tinkoff.edu.java.scrapper.response.AnswersResponse;
 import ru.tinkoff.edu.java.scrapper.response.GithubRepository;
@@ -23,7 +26,6 @@ import ru.tinkoff.edu.java.scrapper.response.StackOverflowResponse;
 
 @Slf4j
 @Component
-@PropertySource("classpath:secrets.properties")
 public class ClientConfig {
 
     @Bean
@@ -107,11 +109,23 @@ public class ClientConfig {
     }
 
     @Bean
+    @ConditionalOnProperty(prefix = "app", value = "bot-client", havingValue = "http")
     public BotClient httpBotClient(@Value("${secrets.bot-base-url}") String baseUrl) {
         // Is there a better way to call a post-construct method?
+        log.info("Using http bot client.");
+
         var client = new HttpBotClient(baseUrl);
         client.init();
         return client;
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "app", value = "bot-client", havingValue = "rabbit")
+    public BotClient rabbitmqBotClient(@Value("${secrets.rabbit.routing_key}") String routingKey,
+                                       RabbitTemplate rabbit) {
+        log.info("Using rabbit bot client.");
+
+        return new RabbitBotClient(rabbit, routingKey);
     }
 
     @Bean("linkParser")
