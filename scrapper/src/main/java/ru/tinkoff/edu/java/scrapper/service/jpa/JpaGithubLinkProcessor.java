@@ -1,5 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.service.jpa;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,18 +16,13 @@ import ru.tinkoff.edu.java.scrapper.service.LinkProcessor;
 import java.util.List;
 
 @Slf4j
+@AllArgsConstructor
 public class JpaGithubLinkProcessor implements LinkProcessor {
-    private Parser linkParser;
+    private final Parser linkParser;
 
-    private GithubClient githubClient;
+    private final GithubClient githubClient;
 
-    private JpaLinkRepository linkRepository;
-
-    public JpaGithubLinkProcessor(Parser linkParser, GithubClient githubClient, JpaLinkRepository linkRepository) {
-        this.linkParser = linkParser;
-        this.githubClient = githubClient;
-        this.linkRepository = linkRepository;
-    }
+    private final JpaLinkRepository linkRepository;
 
     @Override
     public Result process(Link linkRecord) {
@@ -35,8 +31,6 @@ public class JpaGithubLinkProcessor implements LinkProcessor {
         GithubParser.Result parsed = (GithubParser.Result) linkParser.parse(ghLink.toURL());
         var repository = githubClient.getRepository(parsed.user(), parsed.repository());
         var newPullRequests = List.of(repository.getPulls());
-
-        // TODO: check if changes are mapped to db
 
         var toReturn = new Result();
         toReturn.setLinkRecord(ghLink);
@@ -49,7 +43,6 @@ public class JpaGithubLinkProcessor implements LinkProcessor {
 
             toReturn.addUpdate("There are updates at github.");
 
-            // TODO: realize why I return a link, even new...
             var newRec = new Link(ghLink.getId(), ghLink.getUrl(), ghLink.getChatId());
             newRec.setLastUpdate(repository.pushedAt());
 
@@ -62,7 +55,6 @@ public class JpaGithubLinkProcessor implements LinkProcessor {
         log.info("Old prs: " + ghLink.getPullRequests());
         log.info("New prs: " + newPullRequests);
 
-        // TODO: compare pull requests
         for (var oldPr: ghLink.getPullRequests()) {
             var newPrOptional = newPullRequests.stream().filter(pr -> pr.getId().equals(oldPr.getId())).findAny();
             if (newPrOptional.isEmpty()) {

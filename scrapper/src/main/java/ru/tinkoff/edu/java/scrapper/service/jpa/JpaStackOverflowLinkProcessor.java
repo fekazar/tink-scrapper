@@ -1,5 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.service.jpa;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,18 +13,13 @@ import ru.tinkoff.edu.java.scrapper.repository.pojo.StackoverflowLink;
 import ru.tinkoff.edu.java.scrapper.service.LinkProcessor;
 
 @Slf4j
+@AllArgsConstructor
 public class JpaStackOverflowLinkProcessor implements LinkProcessor {
-    private StackOverflowClient stackOverflowClient;
+    private final StackOverflowClient stackOverflowClient;
 
-    private Parser linkParser;
+    private final Parser linkParser;
 
-    private JpaLinkRepository linkRepository;
-
-    public JpaStackOverflowLinkProcessor(StackOverflowClient stackOverflowClient, Parser linkParser, JpaLinkRepository linkRepository) {
-        this.stackOverflowClient = stackOverflowClient;
-        this.linkParser = linkParser;
-        this.linkRepository = linkRepository;
-    }
+    private final JpaLinkRepository linkRepository;
 
     @Override
     public Result process(Link linkRecord) {

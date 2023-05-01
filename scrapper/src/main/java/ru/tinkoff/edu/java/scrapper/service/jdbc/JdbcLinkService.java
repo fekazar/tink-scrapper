@@ -1,5 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.service.jdbc;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,32 +28,19 @@ import java.util.stream.Collectors;
 // TODO: add url correctness check
 
 @Slf4j
+@AllArgsConstructor
 public class JdbcLinkService implements LinkService {
-    private JdbcScrapperRepository repository;
+    private final JdbcScrapperRepository repository;
 
-    private JdbcStackAnswersRepository stackAnswersRepository;
+    private final JdbcStackAnswersRepository stackAnswersRepository;
 
-    private StackOverflowClient stackOverflowClient;
+    private final StackOverflowClient stackOverflowClient;
 
-    private GithubClient githubClient;
+    private final GithubClient githubClient;
 
-    private Map<String, LinkProcessor> linkProcessors;
+    private final Map<String, LinkProcessor> linkProcessors;
 
-    private Parser linkParser;
-
-    public JdbcLinkService(JdbcScrapperRepository repository,
-                           JdbcStackAnswersRepository stackAnswersRepository,
-                           StackOverflowClient stackOverflowClient,
-                           GithubClient githubClient,
-                           Map<String, LinkProcessor> linkProcessors,
-                           Parser linkParser) {
-        this.repository = repository;
-        this.stackAnswersRepository = stackAnswersRepository;
-        this.stackOverflowClient = stackOverflowClient;
-        this.githubClient = githubClient;
-        this.linkProcessors = linkProcessors;
-        this.linkParser = linkParser;
-    }
+    private final Parser linkParser;
 
     public void add(String url, long chatId) {
         try {

@@ -1,5 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.service.jdbc;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.Chat;
@@ -8,12 +9,9 @@ import ru.tinkoff.edu.java.scrapper.service.ChatService;
 
 import java.util.List;
 
+@AllArgsConstructor
 public class JdbcChatService implements ChatService {
-    private JdbcScrapperRepository repository;
-
-    public JdbcChatService(JdbcScrapperRepository repository) {
-        this.repository = repository;
-    }
+    private final JdbcScrapperRepository repository;
 
     public void add(long chatId) {
         repository.addChat(chatId);

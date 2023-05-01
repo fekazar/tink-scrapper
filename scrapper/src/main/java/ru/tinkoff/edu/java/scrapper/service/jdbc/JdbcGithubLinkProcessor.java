@@ -1,5 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.service.jdbc;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,22 +15,17 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
 @Slf4j
+@AllArgsConstructor
 public class JdbcGithubLinkProcessor implements LinkProcessor {
     public static OffsetDateTime DEFAULT_LAST_UPDATE = OffsetDateTime.of(1954, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
 
     public static final String HOST = "github.com";
 
-    public JdbcGithubLinkProcessor(Parser linkParser, GithubClient githubClient, JdbcScrapperRepository scrapperRepository) {
-        this.linkParser = linkParser;
-        this.githubClient = githubClient;
-        this.scrapperRepository = scrapperRepository;
-    }
+    private final Parser linkParser;
 
-    private Parser linkParser;
+    private final GithubClient githubClient;
 
-    private GithubClient githubClient;
-
-    private JdbcScrapperRepository scrapperRepository;
+    private final JdbcScrapperRepository scrapperRepository;
 
 
     @Override

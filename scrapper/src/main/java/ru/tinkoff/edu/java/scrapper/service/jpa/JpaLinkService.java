@@ -1,5 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.service.jpa;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,25 +24,18 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
+@AllArgsConstructor
 public class JpaLinkService implements LinkService {
 
-    private JpaLinkRepository linkRepository;
+    private final JpaLinkRepository linkRepository;
 
-    private StackOverflowClient stackOverflowClient;
+    private final StackOverflowClient stackOverflowClient;
 
-    private GithubClient githubClient;
+    private final GithubClient githubClient;
 
-    private Parser linkParser;
+    private final Parser linkParser;
 
-    private Map<String, LinkProcessor> linkProcessors;
-
-    public JpaLinkService(JpaLinkRepository linkRepository, StackOverflowClient stackOverflowClient, GithubClient githubClient, Parser linkParser, Map<String, LinkProcessor> linkProcessors) {
-        this.linkRepository = linkRepository;
-        this.stackOverflowClient = stackOverflowClient;
-        this.githubClient = githubClient;
-        this.linkParser = linkParser;
-        this.linkProcessors = linkProcessors;
-    }
+    private final Map<String, LinkProcessor> linkProcessors;
 
     @Override
     public void add(String url, long chatId) {

@@ -1,5 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -11,22 +12,13 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
+@AllArgsConstructor
 public class JdbcScrapperRepository {
-    @Autowired
-    @Qualifier("scrapperJdbcTemplate")
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    @Autowired
-    private ChatRowMapper chatRowMapper;
+    private final ChatRowMapper chatRowMapper;
 
-    @Autowired
-    private LinksRowMapper linksRowMapper;
-
-    public JdbcScrapperRepository(NamedParameterJdbcTemplate jdbcTemplate, ChatRowMapper chatRowMapper, LinksRowMapper linksRowMapper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.chatRowMapper = chatRowMapper;
-        this.linksRowMapper = linksRowMapper;
-    }
+    private final LinksRowMapper linksRowMapper;
 
     public List<Chat> getAllChats() {
         return jdbcTemplate.query("select * from chats", chatRowMapper);

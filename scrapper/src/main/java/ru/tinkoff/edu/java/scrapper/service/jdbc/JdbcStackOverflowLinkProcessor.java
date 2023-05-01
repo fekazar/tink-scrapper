@@ -1,5 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.service.jdbc;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.tinkoff.edu.java.parser.Parser;
@@ -13,30 +14,19 @@ import ru.tinkoff.edu.java.scrapper.repository.pojo.StackoverflowLink;
 import ru.tinkoff.edu.java.scrapper.service.LinkProcessor;
 
 @Slf4j
+@AllArgsConstructor
 public class JdbcStackOverflowLinkProcessor implements LinkProcessor {
     public static final String HOST = "stackoverflow.com";
 
-    private Parser linkParser;
+    private final Parser linkParser;
 
-    private StackOverflowClient stackOverflowClient;
+    private final StackOverflowClient stackOverflowClient;
 
-    private JdbcStackAnswersRepository answersRepository;
+    private final JdbcStackAnswersRepository answersRepository;
 
-    private BotClient botClient;
+    private final BotClient botClient;
 
-    private JdbcScrapperRepository scrapperRepository;
-
-    public JdbcStackOverflowLinkProcessor(Parser linkParser,
-                                          StackOverflowClient stackOverflowClient,
-                                          JdbcStackAnswersRepository answersRepository,
-                                          BotClient botClient,
-                                          JdbcScrapperRepository scrapperRepository) {
-        this.linkParser = linkParser;
-        this.stackOverflowClient = stackOverflowClient;
-        this.answersRepository = answersRepository;
-        this.botClient = botClient;
-        this.scrapperRepository = scrapperRepository;
-    }
+    private final JdbcScrapperRepository scrapperRepository;
 
     @Override
     public Result process(Link linkRecord) {

@@ -1,20 +1,16 @@
 package ru.tinkoff.edu.java.scrapper.service.jpa;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import ru.tinkoff.edu.java.scrapper.repository.jpa.JpaChatRepository;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.Chat;
 import ru.tinkoff.edu.java.scrapper.service.ChatService;
 
 import java.util.List;
 
+@AllArgsConstructor
 public class JpaChatService implements ChatService {
-    private JpaChatRepository chatRepository;
-
-    public JpaChatService() {
-    }
-
-    public JpaChatService(JpaChatRepository chatRepository) {
-        this.chatRepository = chatRepository;
-    }
+    private final JpaChatRepository chatRepository;
 
     @Override
     public void add(long chatId) {
