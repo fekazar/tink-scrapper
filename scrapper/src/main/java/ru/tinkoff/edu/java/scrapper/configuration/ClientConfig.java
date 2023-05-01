@@ -21,7 +21,7 @@ import ru.tinkoff.edu.java.scrapper.response.StackOverflowResponse;
 @Slf4j
 @Component
 @PropertySource("classpath:secrets.properties")
-public class ClientConfiguration {
+public class ClientConfig {
 
     @Bean
     public GithubClient getGithubClient(@Value("${secrets.github_api_key}") String githubApiKey) {
