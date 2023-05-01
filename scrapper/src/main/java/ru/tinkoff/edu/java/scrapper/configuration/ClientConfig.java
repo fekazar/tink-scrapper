@@ -1,6 +1,7 @@
 package ru.tinkoff.edu.java.scrapper.configuration;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
@@ -13,6 +14,8 @@ import ru.tinkoff.edu.java.parser.Parser;
 import ru.tinkoff.edu.java.parser.StackOverflowParser;
 import ru.tinkoff.edu.java.scrapper.client.GithubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
+import ru.tinkoff.edu.java.scrapper.client.bot.BotClient;
+import ru.tinkoff.edu.java.scrapper.client.bot.HttpBotClient;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.PullRequest;
 import ru.tinkoff.edu.java.scrapper.response.AnswersResponse;
 import ru.tinkoff.edu.java.scrapper.response.GithubRepository;
@@ -100,6 +103,14 @@ public class ClientConfig {
             }
         };
 
+        return client;
+    }
+
+    @Bean
+    public BotClient httpBotClient(@Value("${secrets.bot-base-url}") String baseUrl) {
+        // Is there a better way to call a post-construct method?
+        var client = new HttpBotClient(baseUrl);
+        client.init();
         return client;
     }
 

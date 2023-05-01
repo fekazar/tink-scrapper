@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import ru.tinkoff.edu.java.scrapper.client.bot.BotClient;
 import ru.tinkoff.edu.java.scrapper.client.bot.HttpBotClient;
 import ru.tinkoff.edu.java.scrapper.service.LinkProcessor;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
@@ -24,7 +25,7 @@ public class LinkUpdateScheduler {
     private LinkService linkService;
 
     @Autowired
-    private HttpBotClient botClient;
+    private BotClient botClient;
 
     @Scheduled(fixedRateString = "#{@getRateMillis}")
     void update() {
