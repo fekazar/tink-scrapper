@@ -16,9 +16,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-// For simplicity this client will be blocking
-// The one who is requesting the object should catch the exception
-
 @Component
 public class ScrapperClient {
 
