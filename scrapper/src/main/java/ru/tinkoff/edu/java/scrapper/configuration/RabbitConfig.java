@@ -1,5 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.configuration;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@Slf4j
 public class RabbitConfig {
     @Bean
     public Queue scrapperQueue(@Value("${secrets.rabbit.queue}") String queueName) {
@@ -28,6 +30,7 @@ public class RabbitConfig {
     public Binding scrapperBinding(@Qualifier("scrapperQueue") Queue queue,
                                    @Qualifier("scrapperExchange") DirectExchange exchange,
                                    @Value("${secrets.rabbit.routing_key}") String routingKey) {
+        log.info("Create binding: " + queue.getName() + "-" + exchange.getName());
         return BindingBuilder.bind(queue).to(exchange).with(routingKey);
     }
 
@@ -44,10 +47,13 @@ public class RabbitConfig {
 
     @Bean
     public RabbitTemplate rabbitTemplate(@Qualifier("cachingConnectionFactory") ConnectionFactory connectionFactory,
-                                         @Value("${secrets.rabbit.routing_key}") String routingKey) {
+                                         @Value("${secrets.rabbit.routing_key}") String routingKey,
+                                         @Value("${secrets.rabbit.exchange}") String exchange) {
         var rabbit = new RabbitTemplate(connectionFactory);
+
         rabbit.setRoutingKey(routingKey);
         rabbit.setMessageConverter(jsonMessageConverter());
+        rabbit.setExchange(exchange);
 
         return rabbit;
     }
