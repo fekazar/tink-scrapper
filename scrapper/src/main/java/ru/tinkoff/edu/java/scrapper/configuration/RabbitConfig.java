@@ -20,7 +20,7 @@ public class RabbitConfig {
     }
 
     @Bean
-    public DirectExchange scrapperExchange(@Value("${secrets.rabbit.queue}") String exchangeName) {
+    public DirectExchange scrapperExchange(@Value("${secrets.rabbit.exchange}") String exchangeName) {
         return ExchangeBuilder.directExchange(exchangeName).build();
     }
 
@@ -43,8 +43,13 @@ public class RabbitConfig {
     }
 
     @Bean
-    public RabbitTemplate rabbitTemplate(@Qualifier("cachingConnectionFactory") ConnectionFactory connectionFactory) {
-        return new RabbitTemplate(connectionFactory);
+    public RabbitTemplate rabbitTemplate(@Qualifier("cachingConnectionFactory") ConnectionFactory connectionFactory,
+                                         @Value("${secrets.rabbit.routing_key}") String routingKey) {
+        var rabbit = new RabbitTemplate(connectionFactory);
+        rabbit.setRoutingKey(routingKey);
+        rabbit.setMessageConverter(jsonMessageConverter());
+
+        return rabbit;
     }
 
     @Bean

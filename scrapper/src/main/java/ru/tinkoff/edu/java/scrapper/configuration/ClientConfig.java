@@ -121,11 +121,10 @@ public class ClientConfig {
 
     @Bean
     @ConditionalOnProperty(prefix = "app", value = "bot-client", havingValue = "rabbit")
-    public BotClient rabbitmqBotClient(@Value("${secrets.rabbit.routing_key}") String routingKey,
-                                       RabbitTemplate rabbit) {
+    public BotClient rabbitmqBotClient(RabbitTemplate rabbit) {
         log.info("Using rabbit bot client.");
 
-        return new RabbitBotClient(rabbit, routingKey);
+        return new RabbitBotClient(rabbit);
     }
 
     @Bean("linkParser")

@@ -7,6 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import ru.tinkoff.edu.java.scrapper.client.bot.BotClient;
 
+import java.util.Scanner;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -19,5 +21,10 @@ public class RabbitTest {
     @Test
     void checkNotNull() {
         assertNotNull(rabbitClient);
+    }
+
+    @Test
+    void simpleSendTest() {
+        rabbitClient.sendUpdates(new BotClient.LinkUpdate("hello msg", "test url", 554));
     }
 }
