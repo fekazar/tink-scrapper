@@ -32,7 +32,7 @@ public class RabbitTest {
 
     @Test
     void simpleSendTest() {
-        rabbitClient.sendUpdates(new BotClient.LinkUpdate("hello msg", "test url", 554));
-        rabbitClient.sendUpdates(new BotClient.LinkUpdate("another hello message", "test url", 554));
+        rabbitClient.sendUpdates(new BotClient.LinkUpdate("hello msg", "test url", 1939233742));
+        rabbitClient.sendUpdates(new BotClient.LinkUpdate("another hello message", "test url", 1939233742));
     }
 }
