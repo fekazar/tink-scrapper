@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import ru.tinkoff.edu.java.parser.Parser;
-import ru.tinkoff.edu.java.scrapper.client.BotClient;
+import ru.tinkoff.edu.java.scrapper.client.bot.HttpBotClient;
 import ru.tinkoff.edu.java.scrapper.client.GithubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.ChatRowMapper;
@@ -79,7 +79,7 @@ public class JdbcPersistenceConfig {
     public JdbcStackOverflowLinkProcessor getJdbcSofLinkProc(Parser linkParser,
                                                              StackOverflowClient stackOverflowClient,
                                                              JdbcStackAnswersRepository answersRepository,
-                                                             BotClient botClient,
+                                                             HttpBotClient botClient,
                                                              JdbcScrapperRepository scrapperRepository) {
         return new JdbcStackOverflowLinkProcessor(linkParser, stackOverflowClient, answersRepository, botClient, scrapperRepository);
     }

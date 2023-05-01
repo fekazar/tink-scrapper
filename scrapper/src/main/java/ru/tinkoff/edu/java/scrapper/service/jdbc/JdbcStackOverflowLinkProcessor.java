@@ -2,10 +2,9 @@ package ru.tinkoff.edu.java.scrapper.service.jdbc;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import ru.tinkoff.edu.java.parser.Parser;
 import ru.tinkoff.edu.java.parser.StackOverflowParser;
-import ru.tinkoff.edu.java.scrapper.client.BotClient;
+import ru.tinkoff.edu.java.scrapper.client.bot.HttpBotClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcScrapperRepository;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcStackAnswersRepository;
@@ -24,7 +23,7 @@ public class JdbcStackOverflowLinkProcessor implements LinkProcessor {
 
     private final JdbcStackAnswersRepository answersRepository;
 
-    private final BotClient botClient;
+    private final HttpBotClient botClient;
 
     private final JdbcScrapperRepository scrapperRepository;
 

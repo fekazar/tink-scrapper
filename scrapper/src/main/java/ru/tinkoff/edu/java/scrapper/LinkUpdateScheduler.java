@@ -6,12 +6,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import ru.tinkoff.edu.java.scrapper.client.BotClient;
+import ru.tinkoff.edu.java.scrapper.client.bot.HttpBotClient;
 import ru.tinkoff.edu.java.scrapper.service.LinkProcessor;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
-import java.net.URL;
 import java.util.*;
 
 @Slf4j
@@ -25,7 +24,7 @@ public class LinkUpdateScheduler {
     private LinkService linkService;
 
     @Autowired
-    private BotClient botClient;
+    private HttpBotClient botClient;
 
     @Scheduled(fixedRateString = "#{@getRateMillis}")
     void update() {
@@ -52,7 +51,7 @@ public class LinkUpdateScheduler {
 
                     // Are "unsafe" entities used in this list? Shouldn't there be an updated link after saving to database?
                     for (var linkRec : chatsByUrls.get(url)) {
-                        sendMessage(new BotClient.RequestBody(result.getDescription(), url, linkRec.getChatId()));
+                        sendMessage(new HttpBotClient.LinkUpdate(result.getDescription(), url, linkRec.getChatId()));
                         log.info("Sending message to: " + linkRec.getChatId());
                     }
                 } else {
@@ -66,7 +65,7 @@ public class LinkUpdateScheduler {
     }
 
     @Async
-    void sendMessage(BotClient.RequestBody body) {
+    void sendMessage(HttpBotClient.LinkUpdate body) {
         try {
             botClient.sendUpdates(body);
         } catch (Exception e) {
