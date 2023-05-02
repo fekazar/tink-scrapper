@@ -21,24 +21,49 @@ import java.util.HashMap;
 @Configuration
 @Slf4j
 public class RabbitConfig {
+    public static final String DLQ = ".dlq";
+
     @Bean
-    public Queue scrapperQueue(@Value("${secrets.rabbit.queue}") String queueName) {
-        return QueueBuilder.durable(queueName).build();
+    public Queue scrapperQueue(@Value("${secrets.rabbit.queue}") String queueName,
+                               @Value("${secrets.rabbit.exchange}") String exchangeName,
+                               @Value("${secrets.rabbit.routing_key}") String routingKey) {
+        return QueueBuilder.durable(queueName)
+                .withArgument("x-dead-letter-exchange", exchangeName + DLQ)
+                .withArgument("x-dead-letter-routing-key", routingKey)
+                .build();
+    }
+
+    @Bean
+    public Queue scrapperDLQueue(@Value("${secrets.rabbit.queue}") String queueName) {
+        return QueueBuilder
+                .nonDurable(queueName + DLQ)
+                .build();
     }
 
     @Bean
     public DirectExchange scrapperExchange(@Value("${secrets.rabbit.exchange}") String exchangeName) {
-        return ExchangeBuilder.directExchange(exchangeName).build();
+        return ExchangeBuilder.fanoutExchange(exchangeName).build();
+    }
+
+    @Bean
+    public FanoutExchange scrapperDLExchange(@Value("${secrets.rabbit.exchange}") String exchangeName) {
+        return ExchangeBuilder.directExchange(exchangeName + DLQ).build();
     }
 
     @Bean
     public Binding scrapperBinding(@Qualifier("scrapperQueue") Queue queue,
-                                   @Qualifier("scrapperExchange") DirectExchange exchange,
+                                   @Qualifier("scrapperExchange") FanoutExchange exchange,
                                    @Value("${secrets.rabbit.routing_key}") String routingKey) {
         log.info("Create binding: " + queue.getName() + "-" + exchange.getName());
-        return BindingBuilder.bind(queue).to(exchange).with(routingKey);
+        return BindingBuilder.bind(queue).to(exchange);
     }
 
+    @Bean
+    public Binding scrapperDLBinding(@Qualifier("scrapperDLQueue") Queue queue,
+                                     @Qualifier("scrapperDLExchange") DirectExchange exchange,
+                                     @Value("${secrets.rabbit.routing_key}") String routingKey) {
+        return BindingBuilder.bind(queue).to(exchange).with(routingKey);
+    }
     @Bean
     public ConnectionFactory cachingConnectionFactory(@Value("${secrets.rabbit.host}") String hostName) {
         var factory = new CachingConnectionFactory(hostName);
