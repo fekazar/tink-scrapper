@@ -7,10 +7,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import ru.tinkoff.edu.java.scrapper.request.AddLinkRequest;
-import ru.tinkoff.edu.java.scrapper.request.RemoveLinkRequest;
-import ru.tinkoff.edu.java.scrapper.response.ApiErrorResponse;
-import ru.tinkoff.edu.java.scrapper.response.LinkResponse;
+import ru.tinkoff.edu.java.bot.client.dto.LinkResponse;
+import ru.tinkoff.edu.java.bot.client.dto.RemoveLinkRequest;
+import ru.tinkoff.edu.java.bot.client.dto.AddLinkRequest;
 
 import java.net.URL;
 import java.util.ArrayList;

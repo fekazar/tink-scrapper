@@ -8,11 +8,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import ru.tinkoff.edu.java.bot.client.ScrapperClient;
+import ru.tinkoff.edu.java.bot.client.dto.LinkResponse;
 import ru.tinkoff.edu.java.bot.tg.MessageProcessor;
 import ru.tinkoff.edu.java.bot.tg.command.CommandProcessor;
 import ru.tinkoff.edu.java.bot.tg.command.ListCommandProcessor;
 import ru.tinkoff.edu.java.bot.tg.command.TrackCommandProcessor;
-import ru.tinkoff.edu.java.scrapper.response.LinkResponse;
 
 import java.util.Map;
 import java.util.TreeMap;
