@@ -42,4 +42,4 @@ jobs:
         with:
           context: ./scrapper
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: "scrapper:latest"
