@@ -37,6 +37,14 @@ services:
     networks:
       - backend
 
+  rabbitmq:
+    image:
+      rabbitmq:management
+    restart: no
+    ports:
+      - 5672:5672
+      - 15672:15672
+
 volumes:
   postgres_vol:
 

@@ -1,12 +1,25 @@
 package ru.tinkoff.edu.java.scrapper.repository.pojo;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Entity(name = "chats")
+@Getter
+@Setter
+@ToString
 public class Chat {
-    private int id;
+    @Id
+    private long id;
 
     public Chat() {
     }
 
-    public Chat(int id) {
+    public Chat(long id) {
         this.id = id;
     }
 }

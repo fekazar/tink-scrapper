@@ -3,6 +3,7 @@ package ru.tinkoff.edu.java.scrapper.controller;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,7 +25,6 @@ import java.util.stream.Collectors;
     consumes = "application/json")
 public class LinksController {
     @Autowired
-    @Qualifier("jdbcLinkService")
     private LinkService linkService;
 
     @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
@@ -33,6 +33,7 @@ public class LinksController {
                          @RequestBody AddLinkRequest request) {
         log.info("POST request to /links");
         log.info("Link to add: " + request);
+        log.info("Url: " + request.url());
 
         linkService.add(request.url().toString(), tgChatId);
 
@@ -50,6 +51,7 @@ public class LinksController {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     @DeleteMapping(value = "/links")

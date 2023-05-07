@@ -20,7 +20,6 @@ public class TgChatController {
     private static final String basePath = "/tg-chat"; // for logging
 
     @Autowired
-    @Qualifier("jdbcChatService")
     private ChatService chatService;
 
     @ApiResponse(responseCode = "200")

@@ -1,5 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -8,16 +9,15 @@ import ru.tinkoff.edu.java.scrapper.repository.pojo.Answer;
 import java.util.List;
 import java.util.Map;
 
-@Repository
+@AllArgsConstructor
 public class JdbcStackAnswersRepository {
-    @Autowired
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public List<Answer> getAnswersFor(long linkId) {
         return jdbcTemplate.query(
                 "select * from stackoverflow_answers where link_id = :linkId",
                 Map.of("linkId", linkId),
-                (rs, rowNum) -> new Answer(rs.getInt("answer_id"), rs.getInt("link_id")));
+                (rs, rowNum) -> new Answer(rs.getLong("answer_id"), rs.getLong("link_id")));
     }
 
     public void addAnswer(long linkId, Answer ans) {

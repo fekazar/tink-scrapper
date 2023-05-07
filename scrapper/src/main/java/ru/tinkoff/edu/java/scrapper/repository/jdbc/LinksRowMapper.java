@@ -11,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
 
-@Component
 @Slf4j
 public class LinksRowMapper implements RowMapper<Link> {
 

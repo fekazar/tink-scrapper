@@ -1,31 +1,25 @@
-package ru.tinkoff.edu.java.scrapper.service.jdbc;
+package ru.tinkoff.edu.java.scrapper.service.jpa;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import ru.tinkoff.edu.java.parser.Parser;
 import ru.tinkoff.edu.java.parser.StackOverflowParser;
-import ru.tinkoff.edu.java.scrapper.client.bot.HttpBotClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcScrapperRepository;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcStackAnswersRepository;
+import ru.tinkoff.edu.java.scrapper.repository.jpa.JpaLinkRepository;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.StackoverflowLink;
 import ru.tinkoff.edu.java.scrapper.service.LinkProcessor;
 
 @Slf4j
 @AllArgsConstructor
-public class JdbcStackOverflowLinkProcessor implements LinkProcessor {
-    public static final String HOST = "stackoverflow.com";
+public class JpaStackOverflowLinkProcessor implements LinkProcessor {
+    private final StackOverflowClient stackOverflowClient;
 
     private final Parser linkParser;
 
-    private final StackOverflowClient stackOverflowClient;
-
-    private final JdbcStackAnswersRepository answersRepository;
-
-    private final HttpBotClient botClient;
-
-    private final JdbcScrapperRepository scrapperRepository;
+    private final JpaLinkRepository linkRepository;
 
     @Override
     public Result process(Link linkRecord) {
@@ -35,6 +29,9 @@ public class JdbcStackOverflowLinkProcessor implements LinkProcessor {
 
         var newQuestion = stackOverflowClient.getQuestions(parsedLink.id()).items().get(0);
         var newAnswers = stackOverflowClient.getAnswers(parsedLink.id()).getAnswers();
+
+        log.info("Old answers: " + sofLink.getAnswers());
+        log.info("New answers: " + newAnswers);
 
         var res = new Result();
         res.setLinkRecord(sofLink);
@@ -48,7 +45,6 @@ public class JdbcStackOverflowLinkProcessor implements LinkProcessor {
                 res.addUpdate(String.format("Answer '%s' was deleted.", old.getAnswerId())); // better set the answer Title
                 res.setChanged();
 
-                answersRepository.deleteAnswer(old.getAnswerId());
                 oldIter.remove();
                 log.info("Deleted answer: " + old.getAnswerId());
             }
@@ -59,7 +55,6 @@ public class JdbcStackOverflowLinkProcessor implements LinkProcessor {
                 res.addUpdate(String.format("There is a new answer: %s.", newAns.getAnswerId()));
                 res.setChanged();
 
-                answersRepository.addAnswer(sofLink.getId(), newAns);
                 sofLink.getAnswers().add(newAns);
                 log.info("New answer: " + newAns.getAnswerId());
             }
@@ -72,9 +67,10 @@ public class JdbcStackOverflowLinkProcessor implements LinkProcessor {
 
             sofLink.setLastUpdate(newQuestion.lastActivityDate());
 
-            scrapperRepository.updateLink(sofLink.getId(), sofLink);
             log.info("Changes at question: " + parsedLink.id());
         }
+
+        linkRepository.save(sofLink);
 
         return res;
     }

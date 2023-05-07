@@ -2,21 +2,23 @@ package ru.tinkoff.edu.java.scrapper;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import ru.tinkoff.edu.java.scrapper.client.BotClient;
+import ru.tinkoff.edu.java.scrapper.client.bot.BotClient;
+import ru.tinkoff.edu.java.scrapper.client.bot.HttpBotClient;
 import ru.tinkoff.edu.java.scrapper.service.LinkProcessor;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
-import java.net.URL;
 import java.util.*;
 
 @Slf4j
 @Component
 public class LinkUpdateScheduler {
     @Autowired
+    @Qualifier("linkProcessorMap")
     private Map<String, LinkProcessor> processorMap;
 
     @Autowired
@@ -43,14 +45,14 @@ public class LinkUpdateScheduler {
             try {
                 Link toProcess = chatsByUrls.get(url).get(0);
                 // TODO: make async
-                //var result = processorMap.get(new URL(url).getHost()).process(toProcess);
                 var result = linkService.process(toProcess);
 
                 if (result.hasChanges()) {
                     log.info("Some changes at: " + url);
 
+                    // Are "unsafe" entities used in this list? Shouldn't there be an updated link after saving to database?
                     for (var linkRec : chatsByUrls.get(url)) {
-                        sendMessage(new BotClient.RequestBody(result.getDescription(), url, linkRec.getChatId()));
+                        sendMessage(new HttpBotClient.LinkUpdate(result.getDescription(), url, linkRec.getChatId()));
                         log.info("Sending message to: " + linkRec.getChatId());
                     }
                 } else {
@@ -64,7 +66,7 @@ public class LinkUpdateScheduler {
     }
 
     @Async
-    void sendMessage(BotClient.RequestBody body) {
+    void sendMessage(HttpBotClient.LinkUpdate body) {
         try {
             botClient.sendUpdates(body);
         } catch (Exception e) {

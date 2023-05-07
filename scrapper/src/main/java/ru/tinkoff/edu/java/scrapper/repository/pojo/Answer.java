@@ -4,30 +4,40 @@ package ru.tinkoff.edu.java.scrapper.repository.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
+@Entity(name = "stackoverflow_answers")
 @Getter
 @Setter
 @AllArgsConstructor
+@ToString
 public class Answer {
     @JsonProperty("answer_id")
-    private int answerId;
+    @Id
+    @Column(name = "answer_id")
+    private Long answerId;
 
     @JsonIgnore
-    private int linkId;
+    @Column(name = "link_id")
+    private Long linkId;
 
     public Answer() {
     }
 
-    public Answer(int answerId, int linkId) {
+    public Answer(Long answerId, Long linkId) {
         this.answerId = answerId;
         this.linkId = linkId;
     }
 
     @JsonProperty(value = "title")
+    @Transient // it's not required, but can be added in future
     private String title;
 
     @Override
@@ -37,11 +47,11 @@ public class Answer {
 
         Answer that = (Answer) o;
 
-        return answerId == that.answerId;
+        return answerId.equals(that.answerId);
     }
 
     @Override
     public int hashCode() {
-        return answerId;
+        return answerId != null ? answerId.hashCode() : 0;
     }
 }

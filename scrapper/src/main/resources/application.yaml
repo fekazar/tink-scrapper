@@ -1,6 +1,7 @@
 app:
   test: 55
-
+  db-access-type: jpa
+  bot-client: rabbit
   scheduler:
     interval: 30000
 
@@ -10,7 +11,12 @@ server:
 spring:
   liquibase:
     enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      show-sql: true
 
-springdoc:
-  swagger-ui:
-    path: /swagger-ui
+logging:
+  level:
+    org:
+      hibernate: INFO
