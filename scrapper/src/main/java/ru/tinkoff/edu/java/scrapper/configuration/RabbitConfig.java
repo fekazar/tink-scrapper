@@ -42,31 +42,32 @@ public class RabbitConfig {
 
     @Bean
     public DirectExchange scrapperExchange(@Value("${secrets.rabbit.exchange}") String exchangeName) {
-        return ExchangeBuilder.fanoutExchange(exchangeName).build();
+        return ExchangeBuilder.directExchange(exchangeName).build();
     }
 
     @Bean
     public FanoutExchange scrapperDLExchange(@Value("${secrets.rabbit.exchange}") String exchangeName) {
-        return ExchangeBuilder.directExchange(exchangeName + DLQ).build();
+        return ExchangeBuilder.fanoutExchange(exchangeName + DLQ).build();
     }
 
     @Bean
     public Binding scrapperBinding(@Qualifier("scrapperQueue") Queue queue,
-                                   @Qualifier("scrapperExchange") FanoutExchange exchange,
+                                   @Qualifier("scrapperExchange") DirectExchange exchange,
                                    @Value("${secrets.rabbit.routing_key}") String routingKey) {
         log.info("Create binding: " + queue.getName() + "-" + exchange.getName());
-        return BindingBuilder.bind(queue).to(exchange);
+        return BindingBuilder.bind(queue).to(exchange).with(routingKey);
     }
 
     @Bean
     public Binding scrapperDLBinding(@Qualifier("scrapperDLQueue") Queue queue,
-                                     @Qualifier("scrapperDLExchange") DirectExchange exchange,
-                                     @Value("${secrets.rabbit.routing_key}") String routingKey) {
-        return BindingBuilder.bind(queue).to(exchange).with(routingKey);
+                                     @Qualifier("scrapperDLExchange") FanoutExchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange);
     }
     @Bean
-    public ConnectionFactory cachingConnectionFactory(@Value("${secrets.rabbit.host}") String hostName) {
+    public ConnectionFactory cachingConnectionFactory(@Value("${secrets.rabbit.host}") String hostName,
+                                                      @Value("${spring.rabbitmq.port}") Integer rabbitPort) {
         var factory = new CachingConnectionFactory(hostName);
+        factory.setPort(rabbitPort);
         return factory;
     }
 

@@ -17,6 +17,13 @@ public class ListCommandProcessor implements CommandProcessor {
     @Autowired
     private ScrapperClient scrapperClient;
 
+    public ListCommandProcessor() {
+    }
+
+    public ListCommandProcessor(ScrapperClient scrapperClient) {
+        this.scrapperClient = scrapperClient;
+    }
+
     @Override
     public String process(String command, String text, long chatId) {
         try {
