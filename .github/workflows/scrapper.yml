@@ -4,7 +4,7 @@ on: push
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: scrapper_image
 
 jobs:
   build:
@@ -42,4 +42,4 @@ jobs:
         with:
           context: ./scrapper
           push: true
-          tags: "scrapper:latest"
+          tags: ${{ steps.meta.outputs.tags }}
