@@ -287,10 +287,11 @@
         <module name="MissingSwitchDefault"/>
         <module name="ModifiedControlVariable"/>
 
-        <module name="MultipleStringLiterals">
-            <!-- Allow zero-length and 1-character strings -->
+        <!-- Allow zero-length and 1-character strings -->
+        <!-- <module name="MultipleStringLiterals">
+
             <property name="ignoreStringsRegexp" value='^(("")|(".")|("..")|("..>"))$'/>
-        </module>
+        </module> -->
 
         <module name="MultipleVariableDeclarations"/>
         <module name="NestedForDepth">

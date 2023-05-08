@@ -1,9 +1,12 @@
 package ru.tinkoff.edu.java.scrapper.service.jdbc;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import ru.tinkoff.edu.java.parser.GithubParser;
 import ru.tinkoff.edu.java.parser.Parser;
 import ru.tinkoff.edu.java.parser.StackOverflowParser;
@@ -18,12 +21,6 @@ import ru.tinkoff.edu.java.scrapper.response.AnswersResponse;
 import ru.tinkoff.edu.java.scrapper.response.StackOverflowResponse;
 import ru.tinkoff.edu.java.scrapper.service.LinkProcessor;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 // TODO: add url correctness check
 
@@ -65,7 +62,9 @@ public class JdbcLinkService implements LinkService {
                     throw new RuntimeException("Incorrect stackoverflow link " + url);
 
                 AnswersResponse answersResponse = stackOverflowClient.getAnswers(res.id());
-                StackOverflowResponse.Question stackQuestion = stackOverflowClient.getQuestions(res.id()).items().get(0); // shouldn't be null
+                StackOverflowResponse.Question stackQuestion = stackOverflowClient.getQuestions(res.id())
+                    .items()
+                    .get(0);
 
                 var newLinkRecord = new Link();
 

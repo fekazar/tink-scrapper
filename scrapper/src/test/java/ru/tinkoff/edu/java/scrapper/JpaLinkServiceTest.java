@@ -3,8 +3,8 @@ package ru.tinkoff.edu.java.scrapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.StackoverflowLink;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 public class JpaLinkServiceTest extends JpaIntegrationEnvironment {

@@ -1,11 +1,13 @@
 package ru.tinkoff.edu.java.scrapper.repository.pojo;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.util.Objects;
 
 @Entity(name = "pull_requests")
 @Getter

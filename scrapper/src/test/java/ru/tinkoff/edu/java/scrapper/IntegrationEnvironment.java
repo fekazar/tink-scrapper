@@ -1,5 +1,6 @@
 package ru.tinkoff.edu.java.scrapper;
 
+import java.nio.file.Path;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;
@@ -7,23 +8,11 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.DirectoryResourceAccessor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.Container;
-import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcScrapperRepository;
-import ru.tinkoff.edu.java.scrapper.repository.jpa.JpaLinkRepository;
-import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcChatService;
-import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcLinkService;
-import ru.tinkoff.edu.java.scrapper.service.jpa.JpaChatService;
-import ru.tinkoff.edu.java.scrapper.service.jpa.JpaLinkService;
-
-import java.nio.file.Path;
 
 @Slf4j
 @TestComponent

@@ -1,15 +1,13 @@
 package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
-import ru.tinkoff.edu.java.scrapper.repository.pojo.GithubLink;
-import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
-import ru.tinkoff.edu.java.scrapper.repository.pojo.StackoverflowLink;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.core.RowMapper;
+import ru.tinkoff.edu.java.scrapper.repository.pojo.GithubLink;
+import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
+import ru.tinkoff.edu.java.scrapper.repository.pojo.StackoverflowLink;
 
 @Slf4j
 public class LinksRowMapper implements RowMapper<Link> {

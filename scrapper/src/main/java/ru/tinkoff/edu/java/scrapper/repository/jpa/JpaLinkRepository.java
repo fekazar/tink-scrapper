@@ -1,13 +1,10 @@
 package ru.tinkoff.edu.java.scrapper.repository.jpa;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
-import ru.tinkoff.edu.java.scrapper.repository.pojo.GithubLink;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.StackoverflowLink;
-
-import java.util.List;
 
 public interface JpaLinkRepository extends ListCrudRepository<Link, Long> {
     // TODO: writer queries to get concrete objects

@@ -1,7 +1,14 @@
 package ru.tinkoff.edu.java.scrapper.configuration;
 
+import java.util.HashMap;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.ExchangeBuilder;
+import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -15,8 +22,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.tinkoff.edu.java.scrapper.client.bot.BotClient;
-
-import java.util.HashMap;
 
 @Configuration
 @Slf4j
@@ -63,6 +68,7 @@ public class RabbitConfig {
                                      @Qualifier("scrapperDLExchange") FanoutExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange);
     }
+
     @Bean
     public ConnectionFactory cachingConnectionFactory(@Value("${secrets.rabbit.host}") String hostName,
                                                       @Value("${spring.rabbitmq.port}") Integer rabbitPort) {

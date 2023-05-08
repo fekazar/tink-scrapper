@@ -1,5 +1,9 @@
 package ru.tinkoff.edu.java.scrapper;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -8,11 +12,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.scrapper.client.bot.BotClient;
 import ru.tinkoff.edu.java.scrapper.client.bot.HttpBotClient;
-import ru.tinkoff.edu.java.scrapper.service.LinkProcessor;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
+import ru.tinkoff.edu.java.scrapper.service.LinkProcessor;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
-
-import java.util.*;
 
 @Slf4j
 @Component
@@ -60,7 +62,6 @@ public class LinkUpdateScheduler {
                 }
             } catch (Exception e) {
                 log.error(e.getMessage());
-                e.printStackTrace();
             }
         }
     }
