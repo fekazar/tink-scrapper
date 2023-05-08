@@ -2,6 +2,8 @@ name: Scrapper module workflow
 
 on:
   push:
+    paths:
+      - scrapper/**
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
