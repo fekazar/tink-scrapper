@@ -4,13 +4,12 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.MessageEntity;
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.constraints.NotNull;
+import java.util.Arrays;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.bot.tg.command.CommandProcessor;
-
-import java.util.Arrays;
-import java.util.Map;
 
 // To add more logic to this processor new CommandProcessor beans should be
 // added to configuration.
@@ -51,11 +50,11 @@ public class MessageProcessor {
         String command = msg.text().substring(commandEntity.offset() + 1, commandEntity.offset() + commandEntity.length());
         log.info("Command arrived: " + command);
 
-        if (!map.containsKey(command)) {
-            return UNSUPPORTED_COMMAND;
-        } else {
-            return map.get(command).process(command, msg.text(), msg.chat().id());
-        }
+        var res = UNSUPPORTED_COMMAND;
+        if (map.containsKey(command))
+            res = map.get(command).process(command, msg.text(), msg.chat().id());
+
+        return res;
     }
 
     @PostConstruct

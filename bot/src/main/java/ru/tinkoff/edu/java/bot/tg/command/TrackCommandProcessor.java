@@ -1,17 +1,13 @@
 package ru.tinkoff.edu.java.bot.tg.command;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import ru.tinkoff.edu.java.bot.client.ScrapperClient;
-
-import javax.sound.midi.Track;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.tinkoff.edu.java.bot.client.ScrapperClient;
 
 @Slf4j
 @Component(value = TrackCommandProcessor.TRACK_COM)

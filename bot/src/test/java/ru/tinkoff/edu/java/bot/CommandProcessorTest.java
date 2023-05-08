@@ -1,14 +1,12 @@
 package ru.tinkoff.edu.java.bot;
 
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import ru.tinkoff.edu.java.bot.tg.command.HelpCommandProcessor;
 import ru.tinkoff.edu.java.bot.tg.command.TrackCommandProcessor;
 import ru.tinkoff.edu.java.bot.tg.command.UntrackCommandProcessor;
-
-import java.util.stream.Stream;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CommandProcessorTest {

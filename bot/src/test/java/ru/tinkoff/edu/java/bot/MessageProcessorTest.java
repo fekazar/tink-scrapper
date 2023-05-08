@@ -3,20 +3,17 @@ package ru.tinkoff.edu.java.bot;
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.MessageEntity;
+import java.util.Map;
+import java.util.TreeMap;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import ru.tinkoff.edu.java.bot.client.ScrapperClient;
 import ru.tinkoff.edu.java.bot.client.dto.LinkResponse;
 import ru.tinkoff.edu.java.bot.tg.MessageProcessor;
 import ru.tinkoff.edu.java.bot.tg.command.CommandProcessor;
 import ru.tinkoff.edu.java.bot.tg.command.ListCommandProcessor;
 import ru.tinkoff.edu.java.bot.tg.command.TrackCommandProcessor;
-
-import java.util.Map;
-import java.util.TreeMap;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
