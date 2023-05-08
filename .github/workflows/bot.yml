@@ -1,21 +1,20 @@
-name: Scrapper module workflow
+name: Bot module workflow
 
 on:
   push:
     paths:
-      - scrapper/**
+      - bot/**
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: scrapper
+  IMAGE_NAME: scrapper_bot
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     needs: style-check
 
     permissions:
@@ -30,8 +29,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-      - name: Build scrapper with Maven
-        run: mvn package -DGITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} -pl scrapper -am
+      - name: Build bot with Maven
+        run: mvn package -DTG_BOT_TOKEN=${{ secrets.TG_BOT_TOKEN }} -pl bot -am
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
         with:
@@ -48,7 +47,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
-          context: ./scrapper
+          context: ./bot
           push: true
           tags: ${{ steps.meta.outputs.tags }}
 
@@ -63,4 +62,4 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Checkstyle
-        run: mvn -DGITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} -pl scrapper -am checkstyle:check
+        run: mvn -DTG_BOT_TOKEN=${{ secrets.TG_BOT_TOKEN }} -pl bot -am checkstyle:check
