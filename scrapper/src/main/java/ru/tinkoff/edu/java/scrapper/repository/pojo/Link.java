@@ -1,13 +1,19 @@
 package ru.tinkoff.edu.java.scrapper.repository.pojo;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.OffsetDateTime;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity(name = "links")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

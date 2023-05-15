@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.tinkoff.edu.java.parser.Parser;
 import ru.tinkoff.edu.java.parser.StackOverflowParser;
-import ru.tinkoff.edu.java.scrapper.client.bot.HttpBotClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
+import ru.tinkoff.edu.java.scrapper.client.bot.BotClient;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcScrapperRepository;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcStackAnswersRepository;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
@@ -23,7 +23,7 @@ public class JdbcStackOverflowLinkProcessor implements LinkProcessor {
 
     private final JdbcStackAnswersRepository answersRepository;
 
-    private final HttpBotClient botClient;
+    private final BotClient botClient;
 
     private final JdbcScrapperRepository scrapperRepository;
 

@@ -2,11 +2,9 @@ package ru.tinkoff.edu.java.scrapper.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -27,6 +25,8 @@ import ru.tinkoff.edu.java.scrapper.response.StackOverflowResponse;
 @Slf4j
 @Component
 public class ClientConfig {
+    public static final String PARAM_SITE = "site";
+    public static final String SOF = "stackoverflow";
 
     @Bean
     public GithubClient getGithubClient(@Value("${secrets.github_api_key}") String githubApiKey) {
@@ -83,7 +83,7 @@ public class ClientConfig {
                             for (long id: ids)
                                 uriBuilder.pathSegment(String.valueOf(id));
 
-                            uriBuilder.queryParam("site", "stackoverflow");
+                            uriBuilder.queryParam(PARAM_SITE, SOF);
                             return uriBuilder.build();
                         })
                         .retrieve()
@@ -96,7 +96,7 @@ public class ClientConfig {
                 return webClient.get()
                         .uri(uriBuilder -> uriBuilder.pathSegment(String.valueOf(questionId))
                                 .pathSegment("answers")
-                                .queryParam("site", "stackoverflow")
+                                .queryParam(PARAM_SITE, SOF)
                                 .build()
                         )
                         .retrieve()

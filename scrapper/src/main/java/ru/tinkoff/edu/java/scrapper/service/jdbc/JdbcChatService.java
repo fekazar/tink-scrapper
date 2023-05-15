@@ -1,13 +1,10 @@
 package ru.tinkoff.edu.java.scrapper.service.jdbc;
 
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import ru.tinkoff.edu.java.scrapper.repository.pojo.Chat;
-import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcScrapperRepository;
-import ru.tinkoff.edu.java.scrapper.service.ChatService;
-
 import java.util.List;
+import lombok.AllArgsConstructor;
+import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcScrapperRepository;
+import ru.tinkoff.edu.java.scrapper.repository.pojo.Chat;
+import ru.tinkoff.edu.java.scrapper.service.ChatService;
 
 @AllArgsConstructor
 public class JdbcChatService implements ChatService {

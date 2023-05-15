@@ -1,11 +1,15 @@
 package ru.tinkoff.edu.java.scrapper.repository.pojo;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 // TODO: change fetch of answers to lazy
 
@@ -20,7 +24,6 @@ public class StackoverflowLink extends Link {
     private List<Answer> answers = new ArrayList<>();
 
     public StackoverflowLink() {
-        super();
         hostType = "stackoverflow";
     }
 }

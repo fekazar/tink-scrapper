@@ -1,12 +1,11 @@
 package ru.tinkoff.edu.java.scrapper.service;
 
-import lombok.Getter;
-import lombok.Setter;
-import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.Getter;
+import lombok.Setter;
+import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
 
 /*
     This interface is part of service => it can inject only repositories.

@@ -1,7 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.time.OffsetDateTime;
 import java.util.List;
 

@@ -1,5 +1,8 @@
 package ru.tinkoff.edu.java.scrapper.configuration;
 
+import java.util.HashMap;
+import java.util.Map;
+import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -7,9 +10,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import ru.tinkoff.edu.java.parser.Parser;
-import ru.tinkoff.edu.java.scrapper.client.bot.HttpBotClient;
 import ru.tinkoff.edu.java.scrapper.client.GithubClient;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClient;
+import ru.tinkoff.edu.java.scrapper.client.bot.BotClient;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.ChatRowMapper;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcScrapperRepository;
 import ru.tinkoff.edu.java.scrapper.repository.jdbc.JdbcStackAnswersRepository;
@@ -21,10 +24,6 @@ import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcChatService;
 import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcGithubLinkProcessor;
 import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcLinkService;
 import ru.tinkoff.edu.java.scrapper.service.jdbc.JdbcStackOverflowLinkProcessor;
-
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @Configuration
@@ -51,7 +50,9 @@ public class JdbcPersistenceConfig {
     }
 
     @Bean
-    public JdbcScrapperRepository getJdbcScrapperRepo(NamedParameterJdbcTemplate jdbcTemplate, ChatRowMapper chatRowMapper, LinksRowMapper linksRowMapper) {
+    public JdbcScrapperRepository getJdbcScrapperRepo(NamedParameterJdbcTemplate jdbcTemplate,
+        ChatRowMapper chatRowMapper,
+        LinksRowMapper linksRowMapper) {
         return new JdbcScrapperRepository(jdbcTemplate, chatRowMapper, linksRowMapper);
     }
 
@@ -71,7 +72,9 @@ public class JdbcPersistenceConfig {
     }
 
     @Bean
-    public JdbcGithubLinkProcessor getJdbcGhLinkProc(Parser linkParser, GithubClient githubClient, JdbcScrapperRepository scrapperRepository) {
+    public JdbcGithubLinkProcessor getJdbcGhLinkProc(Parser linkParser,
+        GithubClient githubClient,
+        JdbcScrapperRepository scrapperRepository) {
         return new JdbcGithubLinkProcessor(linkParser, githubClient, scrapperRepository);
     }
 
@@ -79,7 +82,7 @@ public class JdbcPersistenceConfig {
     public JdbcStackOverflowLinkProcessor getJdbcSofLinkProc(Parser linkParser,
                                                              StackOverflowClient stackOverflowClient,
                                                              JdbcStackAnswersRepository answersRepository,
-                                                             HttpBotClient botClient,
+                                                             BotClient botClient,
                                                              JdbcScrapperRepository scrapperRepository) {
         return new JdbcStackOverflowLinkProcessor(linkParser, stackOverflowClient, answersRepository, botClient, scrapperRepository);
     }

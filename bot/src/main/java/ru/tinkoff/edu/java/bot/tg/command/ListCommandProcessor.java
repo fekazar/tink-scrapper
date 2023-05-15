@@ -1,12 +1,10 @@
 package ru.tinkoff.edu.java.bot.tg.command;
 
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.bot.client.ScrapperClient;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Component(ListCommandProcessor.LIST_COM)
 @Slf4j
@@ -16,6 +14,13 @@ public class ListCommandProcessor implements CommandProcessor {
 
     @Autowired
     private ScrapperClient scrapperClient;
+
+    public ListCommandProcessor() {
+    }
+
+    public ListCommandProcessor(ScrapperClient scrapperClient) {
+        this.scrapperClient = scrapperClient;
+    }
 
     @Override
     public String process(String command, String text, long chatId) {

@@ -22,5 +22,6 @@ public abstract class Parser {
     }
 
     protected abstract String getHost();
+
     protected abstract ParseResult process(URL url);
 }

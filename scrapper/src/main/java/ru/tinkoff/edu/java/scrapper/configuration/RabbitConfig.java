@@ -1,7 +1,14 @@
 package ru.tinkoff.edu.java.scrapper.configuration;
 
+import java.util.HashMap;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.ExchangeBuilder;
+import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -15,8 +22,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.tinkoff.edu.java.scrapper.client.bot.BotClient;
-
-import java.util.HashMap;
 
 @Configuration
 @Slf4j
@@ -42,31 +47,33 @@ public class RabbitConfig {
 
     @Bean
     public DirectExchange scrapperExchange(@Value("${secrets.rabbit.exchange}") String exchangeName) {
-        return ExchangeBuilder.fanoutExchange(exchangeName).build();
+        return ExchangeBuilder.directExchange(exchangeName).build();
     }
 
     @Bean
     public FanoutExchange scrapperDLExchange(@Value("${secrets.rabbit.exchange}") String exchangeName) {
-        return ExchangeBuilder.directExchange(exchangeName + DLQ).build();
+        return ExchangeBuilder.fanoutExchange(exchangeName + DLQ).build();
     }
 
     @Bean
     public Binding scrapperBinding(@Qualifier("scrapperQueue") Queue queue,
-                                   @Qualifier("scrapperExchange") FanoutExchange exchange,
+                                   @Qualifier("scrapperExchange") DirectExchange exchange,
                                    @Value("${secrets.rabbit.routing_key}") String routingKey) {
         log.info("Create binding: " + queue.getName() + "-" + exchange.getName());
-        return BindingBuilder.bind(queue).to(exchange);
+        return BindingBuilder.bind(queue).to(exchange).with(routingKey);
     }
 
     @Bean
     public Binding scrapperDLBinding(@Qualifier("scrapperDLQueue") Queue queue,
-                                     @Qualifier("scrapperDLExchange") DirectExchange exchange,
-                                     @Value("${secrets.rabbit.routing_key}") String routingKey) {
-        return BindingBuilder.bind(queue).to(exchange).with(routingKey);
+                                     @Qualifier("scrapperDLExchange") FanoutExchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange);
     }
+
     @Bean
-    public ConnectionFactory cachingConnectionFactory(@Value("${secrets.rabbit.host}") String hostName) {
+    public ConnectionFactory cachingConnectionFactory(@Value("${secrets.rabbit.host}") String hostName,
+                                                      @Value("${spring.rabbitmq.port}") Integer rabbitPort) {
         var factory = new CachingConnectionFactory(hostName);
+        factory.setPort(rabbitPort);
         return factory;
     }
 

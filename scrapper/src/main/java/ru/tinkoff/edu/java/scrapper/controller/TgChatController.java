@@ -5,9 +5,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.tinkoff.edu.java.scrapper.response.ApiErrorResponse;
 import ru.tinkoff.edu.java.scrapper.service.ChatService;
 
@@ -17,8 +20,6 @@ import ru.tinkoff.edu.java.scrapper.service.ChatService;
     consumes = MediaType.APPLICATION_JSON_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE)
 public class TgChatController {
-    private static final String basePath = "/tg-chat"; // for logging
-
     @Autowired
     private ChatService chatService;
 
@@ -26,7 +27,7 @@ public class TgChatController {
     @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     @PostMapping("/{id}")
     void registerChat(@PathVariable long id) {
-        log.info("POST request to " + basePath + "/{id}");
+        log.info("POST request to /{id}");
         chatService.add(id);
     }
 
@@ -35,7 +36,7 @@ public class TgChatController {
     @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     @DeleteMapping("/{id}")
     void deleteChat(@PathVariable long id) {
-        log.info("DELETE request to " + basePath + "/{id}");
+        log.info("DELETE request to /{id}");
         chatService.remove(id);
     }
 }

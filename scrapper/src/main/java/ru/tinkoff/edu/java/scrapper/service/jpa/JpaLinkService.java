@@ -1,11 +1,11 @@
 package ru.tinkoff.edu.java.scrapper.service.jpa;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.parser.GithubParser;
 import ru.tinkoff.edu.java.parser.Parser;
 import ru.tinkoff.edu.java.parser.StackOverflowParser;
@@ -17,11 +17,6 @@ import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.StackoverflowLink;
 import ru.tinkoff.edu.java.scrapper.service.LinkProcessor;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @AllArgsConstructor

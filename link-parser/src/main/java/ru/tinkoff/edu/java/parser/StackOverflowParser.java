@@ -3,6 +3,8 @@ package ru.tinkoff.edu.java.parser;
 import java.net.URL;
 
 public class StackOverflowParser extends Parser {
+    private static final int MIN_LENGTH = 3;
+
     @Override
     protected String getHost() {
         return "stackoverflow.com";
@@ -12,7 +14,7 @@ public class StackOverflowParser extends Parser {
     protected ParseResult process(URL url) {
         String[] path = url.getPath().split("/");
 
-        if (path.length < 3)
+        if (path.length < MIN_LENGTH)
             throw new RuntimeException("Incorrect stackoverflow reference path.");
 
         try {
@@ -22,5 +24,5 @@ public class StackOverflowParser extends Parser {
         }
     }
 
-    public record Result (long id) implements ParseResult { }
+    public record Result(long id) implements ParseResult { }
 }

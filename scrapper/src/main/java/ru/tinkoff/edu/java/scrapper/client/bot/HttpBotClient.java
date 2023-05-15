@@ -1,12 +1,8 @@
 package ru.tinkoff.edu.java.scrapper.client.bot;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.PostConstruct;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Slf4j

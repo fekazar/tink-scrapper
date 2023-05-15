@@ -1,13 +1,10 @@
 package ru.tinkoff.edu.java.scrapper.repository.jdbc;
 
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.stereotype.Repository;
-import ru.tinkoff.edu.java.scrapper.repository.pojo.Answer;
-
 import java.util.List;
 import java.util.Map;
+import lombok.AllArgsConstructor;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import ru.tinkoff.edu.java.scrapper.repository.pojo.Answer;
 
 @AllArgsConstructor
 public class JdbcStackAnswersRepository {

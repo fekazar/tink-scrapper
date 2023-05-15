@@ -1,30 +1,42 @@
 package ru.tinkoff.edu.java.bot;
 
+import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.MessageEntity;
+import java.util.Map;
+import java.util.TreeMap;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import ru.tinkoff.edu.java.bot.client.ScrapperClient;
+import ru.tinkoff.edu.java.bot.client.dto.LinkResponse;
 import ru.tinkoff.edu.java.bot.tg.MessageProcessor;
 import ru.tinkoff.edu.java.bot.tg.command.CommandProcessor;
 import ru.tinkoff.edu.java.bot.tg.command.ListCommandProcessor;
 import ru.tinkoff.edu.java.bot.tg.command.TrackCommandProcessor;
-
-import java.util.Map;
-import java.util.TreeMap;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @Slf4j
 public class MessageProcessorTest {
+    private static Message msg;
+
+    @BeforeAll
+    static void setup() {
+        var chat = mock(Chat.class);
+        when(chat.id()).thenReturn(1l);
+
+        msg = mock(Message.class);
+        when(msg.chat()).thenReturn(chat);
+    }
+
     @Test
     void check_empty_list_msg_processor_Test() {
         final var text = "/list";
 
         var msgEntity = new MessageEntity(MessageEntity.Type.bot_command, 0, text.length());
 
-        var msg = mock(Message.class);
         when(msg.text()).thenReturn(text);
         when(msg.entities()).thenReturn(new MessageEntity[]{msgEntity});
 
@@ -33,7 +45,10 @@ public class MessageProcessorTest {
         // For now ListCommandProcessor always return an empty list.
         // Later it's repository will be mocked.
 
-        map.put("list", new ListCommandProcessor());
+        var scrapperClient = mock(ScrapperClient.class);
+        when(scrapperClient.getLinks(1)).thenReturn(new LinkResponse[]{});
+
+        map.put("list", new ListCommandProcessor(scrapperClient));
         var msgProcessor = new MessageProcessor(map);
 
         assertEquals(ListCommandProcessor.EMPTY_LIST, msgProcessor.process(msg));
@@ -45,7 +60,6 @@ public class MessageProcessorTest {
             new MessageEntity(MessageEntity.Type.bot_command, 0, 1),
             new MessageEntity(MessageEntity.Type.bot_command, 0, 1)};
 
-        var msg = mock(Message.class);
         when(msg.entities()).thenReturn(entities);
         when(msg.text()).thenReturn("some text, doesn't matter in this case");
 
@@ -62,7 +76,6 @@ public class MessageProcessorTest {
                 text.indexOf("/track"),
                 6);
 
-        var msg = mock(Message.class);
         when(msg.text()).thenReturn(text);
         when(msg.entities()).thenReturn(new MessageEntity[]{msgEntity});
 
@@ -76,7 +89,7 @@ public class MessageProcessorTest {
 
     @Test
     void no_command_Test() {
-        var msg = mock(Message.class);
+        when(msg.chat().id()).thenReturn(1l);
 
         // Map is not required in this test
         var msgProcessor = new MessageProcessor(null);
@@ -88,7 +101,6 @@ public class MessageProcessorTest {
         final var text = "/test";
         var entities = new MessageEntity[]{ new MessageEntity(MessageEntity.Type.bot_command, 0, text.length())};
 
-        var msg = mock(Message.class);
         when(msg.entities()).thenReturn(entities);
         when(msg.text()).thenReturn(text);
 

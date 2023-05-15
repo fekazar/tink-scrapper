@@ -11,6 +11,8 @@ server:
 spring:
   liquibase:
     enabled: false
+  rabbitmq:
+    port: 5672
   jpa:
     hibernate:
       ddl-auto: validate

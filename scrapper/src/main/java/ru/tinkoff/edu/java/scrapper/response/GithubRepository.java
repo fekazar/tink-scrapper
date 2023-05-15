@@ -2,12 +2,11 @@ package ru.tinkoff.edu.java.scrapper.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.OffsetDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.PullRequest;
-
-import java.time.OffsetDateTime;
 
 @ToString
 public class GithubRepository {

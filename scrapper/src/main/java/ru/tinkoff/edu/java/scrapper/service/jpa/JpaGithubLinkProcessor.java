@@ -1,10 +1,8 @@
 package ru.tinkoff.edu.java.scrapper.service.jpa;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.parser.GithubParser;
 import ru.tinkoff.edu.java.parser.Parser;
 import ru.tinkoff.edu.java.scrapper.client.GithubClient;
@@ -12,8 +10,6 @@ import ru.tinkoff.edu.java.scrapper.repository.jpa.JpaLinkRepository;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.GithubLink;
 import ru.tinkoff.edu.java.scrapper.repository.pojo.Link;
 import ru.tinkoff.edu.java.scrapper.service.LinkProcessor;
-
-import java.util.List;
 
 @Slf4j
 @AllArgsConstructor
@@ -63,8 +59,13 @@ public class JpaGithubLinkProcessor implements LinkProcessor {
             } else {
                 var samePr = newPrOptional.get();
                 if (!samePr.getState().equals(oldPr.getState())) {
-                    log.info(String.format("Pull request %d changed state: %s -> %s.", oldPr.getId(), oldPr.getState(), samePr.getState()));
-                    toReturn.addUpdate(String.format("Pull request %d changed state: %s -> %s.", oldPr.getId(), oldPr.getState(), samePr.getState()));
+                    var msg = String.format("Pull request %d changed state: %s -> %s.",
+                        oldPr.getId(),
+                        oldPr.getState(),
+                        samePr.getState());
+
+                    log.info(msg);
+                    toReturn.addUpdate(msg);
                     oldPr.setState(samePr.getState());
                     toReturn.setChanged();
                 }

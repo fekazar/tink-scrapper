@@ -1,15 +1,14 @@
 package ru.tinkoff.edu.java.bot.tg.command;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import ru.tinkoff.edu.java.bot.client.ScrapperClient;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.tinkoff.edu.java.bot.client.ScrapperClient;
 
 @Slf4j
 @Component(value = UntrackCommandProcessor.UNTRACK_COM)

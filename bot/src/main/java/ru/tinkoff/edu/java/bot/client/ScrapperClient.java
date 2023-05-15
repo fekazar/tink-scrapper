@@ -1,23 +1,21 @@
 package ru.tinkoff.edu.java.bot.client;
 
+import java.net.URL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
-import ru.tinkoff.edu.java.scrapper.request.AddLinkRequest;
-import ru.tinkoff.edu.java.scrapper.request.RemoveLinkRequest;
-import ru.tinkoff.edu.java.scrapper.response.ApiErrorResponse;
-import ru.tinkoff.edu.java.scrapper.response.LinkResponse;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import ru.tinkoff.edu.java.bot.client.dto.AddLinkRequest;
+import ru.tinkoff.edu.java.bot.client.dto.LinkResponse;
+import ru.tinkoff.edu.java.bot.client.dto.RemoveLinkRequest;
 
 @Component
 public class ScrapperClient {
+    public static final String LINKS = "links";
+    public static final String TG_ID_HEADER = "tgChatId";
 
     @Autowired
     @Qualifier("scrapperWebClient")
@@ -31,9 +29,9 @@ public class ScrapperClient {
         var request = new AddLinkRequest(url);
 
         return client.post()
-                .uri(uriBuilder -> uriBuilder.pathSegment("links").build())
-                .header("content-type", MediaType.APPLICATION_JSON_VALUE)
-                .header("tgChatId", String.valueOf(chatId))
+                .uri(uriBuilder -> uriBuilder.pathSegment(LINKS).build())
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .header(TG_ID_HEADER, String.valueOf(chatId))
                 .bodyValue(request)
                 .retrieve()
                 .bodyToMono(LinkResponse.class)
@@ -42,8 +40,8 @@ public class ScrapperClient {
 
     public LinkResponse deleteLink(long tgChatId, URL url) {
         return client.method(HttpMethod.DELETE)
-                .uri(uriBuilder -> uriBuilder.pathSegment("links").build())
-                .header("tgChatId", String.valueOf(tgChatId))
+                .uri(uriBuilder -> uriBuilder.pathSegment(LINKS).build())
+                .header(TG_ID_HEADER, String.valueOf(tgChatId))
                 .bodyValue(new RemoveLinkRequest(url))
                 .retrieve()
                 .bodyToMono(LinkResponse.class)
@@ -53,10 +51,10 @@ public class ScrapperClient {
     public LinkResponse[] getLinks(long tgChatId) {
         return client.get()
                 .uri(uriBuilder -> uriBuilder
-                        .pathSegment("links")
+                        .pathSegment(LINKS)
                         .build())
-                .header("tgChatId", String.valueOf(tgChatId))
-                .header("Content-type", "application/json")
+                .header(TG_ID_HEADER, String.valueOf(tgChatId))
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .retrieve()
                 .bodyToMono(LinkResponse[].class)
                 .block();
@@ -67,7 +65,7 @@ public class ScrapperClient {
                 .uri(uriBuilder -> uriBuilder
                         .pathSegment("tg-chat")
                         .pathSegment(String.valueOf(tgChatId)).build())
-                .header("content-type", MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
@@ -76,10 +74,10 @@ public class ScrapperClient {
     public void deleteChat(long tgChatId) {
         client.delete()
                 .uri(uriBuilder -> uriBuilder
-                        .pathSegment("links")
+                        .pathSegment(LINKS)
                         .pathSegment(String.valueOf(tgChatId)).build())
-                .header("content-type", MediaType.APPLICATION_JSON_VALUE)
-                .header("tgChatId", String.valueOf(tgChatId))
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .header(TG_ID_HEADER, String.valueOf(tgChatId))
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();

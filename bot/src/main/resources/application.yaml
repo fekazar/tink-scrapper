@@ -1,5 +1,5 @@
 app:
-  test: 54
+  test: 11
 
 server:
   port: 8080
