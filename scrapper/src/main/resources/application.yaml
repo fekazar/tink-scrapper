@@ -9,6 +9,9 @@ server:
   port: 8081
 
 spring:
+  application:
+    name: scrapper
+
   liquibase:
     enabled: false
   rabbitmq:
@@ -29,8 +32,10 @@ management:
       base-path: "/"
       path-mapping:
         prometheus: "metrics"
+        health: "health"
+        info: "info"
       exposure:
-        include: "*"
+        include: "health,info,prometheus"
 
     jmx:
       exposure:
@@ -43,3 +48,6 @@ management:
     distribution:
       percentiles-histogram:
         "[http.server.requests]": true
+
+  metrics.tags:
+    application: ${spring.application.name}
