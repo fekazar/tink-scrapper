@@ -2,6 +2,7 @@ package ru.tinkoff.edu.java.bot.tg;
 
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.MessageEntity;
+import io.micrometer.core.instrument.Counter;
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.constraints.NotNull;
 import java.util.Arrays;
@@ -22,17 +23,21 @@ public class MessageProcessor {
     public static final String UNSUPPORTED_COMMAND = "This is an unsupported command.";
     public static final String MULTIPLE_COMMANDS = "Multiple commands are unsupported in one request.";
 
-    private Map<String, CommandProcessor> map;
+    private final Map<String, CommandProcessor> map;
+    private final Counter messageCounter;
 
-    @Autowired
-    public MessageProcessor(Map<String, CommandProcessor> map) {
+    public MessageProcessor(Map<String, CommandProcessor> map, Counter messagesCounter) {
         this.map = map;
+        this.messageCounter = messagesCounter;
     }
 
     // Message cannot be null. This method should be called only
     // to process a new message and no other type of updates.
     // Returns the message text to be sent to user.
     public String process(@NotNull Message msg) {
+        if (messageCounter != null)
+            messageCounter.increment();
+
         if (msg.entities() == null)
             return NO_COMMAND;
 

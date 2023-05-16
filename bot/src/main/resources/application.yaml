@@ -1,10 +1,13 @@
 app:
   test: 11
+  counter-name: messages_processed
 
 server:
   port: 8080
 
 spring:
+  application:
+    name: bot-scrapper
   rabbitmq:
     listener:
       simple:
@@ -13,3 +16,29 @@ spring:
 springdoc:
   swagger-ui:
     path: /swagger-ui
+
+management:
+  endpoints:
+    web:
+      base-path: "/"
+      path-mapping:
+        prometheus: "metrics"
+        health: "health"
+        info: "info"
+      exposure:
+        include: "health,info,prometheus"
+
+    jmx:
+      exposure:
+        include: "*"
+
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
+
+  metrics.tags:
+    application: ${spring.application.name}

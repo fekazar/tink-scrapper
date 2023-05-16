@@ -49,7 +49,7 @@ public class MessageProcessorTest {
         when(scrapperClient.getLinks(1)).thenReturn(new LinkResponse[]{});
 
         map.put("list", new ListCommandProcessor(scrapperClient));
-        var msgProcessor = new MessageProcessor(map);
+        var msgProcessor = new MessageProcessor(map, null);
 
         assertEquals(ListCommandProcessor.EMPTY_LIST, msgProcessor.process(msg));
     }
@@ -64,7 +64,7 @@ public class MessageProcessorTest {
         when(msg.text()).thenReturn("some text, doesn't matter in this case");
 
         // Map is not required in this test
-        var msgProcessor = new MessageProcessor(null);
+        var msgProcessor = new MessageProcessor(null, null);
         assertEquals(MessageProcessor.MULTIPLE_COMMANDS, msgProcessor.process(msg));
     }
 
@@ -92,7 +92,7 @@ public class MessageProcessorTest {
         when(msg.chat().id()).thenReturn(1l);
 
         // Map is not required in this test
-        var msgProcessor = new MessageProcessor(null);
+        var msgProcessor = new MessageProcessor(null, null);
         assertEquals(MessageProcessor.NO_COMMAND, msgProcessor.process(msg));
     }
 
@@ -105,7 +105,7 @@ public class MessageProcessorTest {
         when(msg.text()).thenReturn(text);
 
         // Map should be empty for no command to be found
-        var msgProcessor = new MessageProcessor(new TreeMap<>());
+        var msgProcessor = new MessageProcessor(new TreeMap<>(), null);
         assertEquals(MessageProcessor.UNSUPPORTED_COMMAND, msgProcessor.process(msg));
     }
 }
