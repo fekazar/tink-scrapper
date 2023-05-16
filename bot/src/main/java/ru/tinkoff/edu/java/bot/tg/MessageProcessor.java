@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.bot.tg.command.CommandProcessor;
 
