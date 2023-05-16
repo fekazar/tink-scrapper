@@ -82,7 +82,7 @@ public class MessageProcessorTest {
         Map<String, CommandProcessor> map = new TreeMap<>();
 
         map.put("track", new TrackCommandProcessor());
-        var msgProcessor = new MessageProcessor(map);
+        var msgProcessor = new MessageProcessor(map, null);
 
         assertEquals(TrackCommandProcessor.BAD_URL, msgProcessor.process(msg));
     }
