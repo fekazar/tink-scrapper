@@ -1,0 +1,78 @@
+version: "3.9"
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    network_mode: host
+
+  grafana:
+    image: grafana/grafana-oss
+    volumes:
+      - grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    network_mode: host
+
+  postgresql:
+    image: postgres:15
+    hostname: postgres
+
+    restart: always
+
+    volumes:
+      - postgres_vol:/var/lib/postgresql/data
+
+    environment:
+      POSTGRES_DB: scrapper
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+
+    ports:
+      - 5432:5432
+
+    networks:
+      - backend
+
+  liquibase-migrations:
+    image: liquibase/liquibase:4.18
+    depends_on:
+      - postgresql
+    command:
+      - --hub-mode=off
+      - --changelog-file=master.xml
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://postgresql:5432/scrapper
+      - --username=postgres
+      - --password=secret
+      - update
+    volumes:
+      - ./scrapper/migrations:/liquibase/changelog
+    networks:
+      - backend
+
+  rabbitmq:
+    image:
+      rabbitmq:management
+    restart: no
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+volumes:
+  postgres_vol:
+  prometheus:
+  grafana:
+
+networks:
+  backend:

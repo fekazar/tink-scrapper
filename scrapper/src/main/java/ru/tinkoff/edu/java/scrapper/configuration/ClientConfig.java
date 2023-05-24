@@ -30,8 +30,6 @@ public class ClientConfig {
 
     @Bean
     public GithubClient getGithubClient(@Value("${secrets.github_api_key}") String githubApiKey) {
-        log.info("Github api token: " + githubApiKey);
-
         final var webClient = WebClient.builder()
                 .defaultHeader("authorization", "Bearer " + githubApiKey)
                 .baseUrl("https://api.github.com/repos/")
